@@ -8,8 +8,8 @@ function onOpen() {
 
 function showMenu() {
   var menu = [
-    {name: "Get Instagram Follower Count", functionName: "setIgFollowerData"},
-   ];
+    {name: "Get Instagram Follower Count", functionName: "setIgFollowerData"}
+  ];
   bk.addMenu("Custom Management", menu);
 }
 
@@ -28,7 +28,7 @@ function setIgFollowerData() {
 
 function getFollowerNumber(accountUrl) {
   var json = getJson(accountUrl);
-  return json != ngMessage? json.entry_data.ProfilePage[0].user.followed_by.count: ngMessage;
+  return json !== ngMessage? json.entry_data.ProfilePage[0].user.followed_by.count: ngMessage;
 }
 
 function getJson(url) {
