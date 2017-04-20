@@ -14,44 +14,33 @@ function showMenu() {
 }
 
 function setIgFollowerData() {
-  var lastRow = igFollowerSheet.getLastRow();
-  for(var i = lastRow; i >= 3; i--){
-    var accountName = igFollowerSheet.getRange(i, 1);
-    if (accountName.getValue() !== "") {
-      var accountUrl = "https://www.instagram.com/" + accountName.getValue();
-      Logger.log(accountUrl)
-      var followerNumer = getFollwerNumber(accountUrl);
-      igFollowerSheet.getRange(i, 2).setValue(followerNumer);
-    }
-  }
-}
-    
-function getFollwerNumber(accountUrl) {
-  var encodedURL = encodeURI(accountUrl);
-  try {
-    var response = UrlFetchApp.fetch(encodedURL); 
-    var json = getJson(response);
-    if (json != ngMessage) {
-      return json.entry_data.ProfilePage[0].user.followed_by.count;
-    } else {
-      return ngMessage;
-    }
-  } catch(err) {
-    Logger.log(err);
-    return ngMessage
+  var startRow = 3;
+  var accounts = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 1).getValues().filter(function(e) {
+    return e && e[0];
+  });
+  for(var i = 0; i < accounts.length; i++){
+    var account = accounts[i];
+    var accountUrl = "https://www.instagram.com/" + account[0];
+    var followerNumber = getFollowerNumber(accountUrl);
+    igFollowerSheet.getRange(i+startRow, 2).setValue(followerNumber);
   }
 }
 
-function getJson(response) {
-  var myRegexp = /<script type="text\/javascript">window\._sharedData =([\s\S]*?)<\/script>/i;
-  var match    = myRegexp.exec(response.getContentText());
-  if (match) {
-    try {
-      return JSON.parse(match[0].replace("<script type=\"text\/javascript\">window\._sharedData =", "").replace(";<\/script>" , ""));
-    } catch(err) {
-      Logger.log(err);
-      return ngMessage;
-    }
+function getFollowerNumber(accountUrl) {
+  var json = getJson(accountUrl);
+  return json != ngMessage? json.entry_data.ProfilePage[0].user.followed_by.count: ngMessage;
+}
+
+function getJson(url) {
+  try {
+    var encodedURL = encodeURI(url);
+    var response = UrlFetchApp.fetch(encodedURL);
+    var myRegexp = /<script type="text\/javascript">window\._sharedData =([\s\S]*?)<\/script>/i;
+    var match    = myRegexp.exec(response.getContentText());
+    return JSON.parse(match[0].replace("<script type=\"text\/javascript\">window\._sharedData =", "").replace(";<\/script>" , ""));
+  } catch(err) {
+    Logger.log(err);
+    return ngMessage;
   }
 }
 
