@@ -24,6 +24,9 @@ function doPost(e) {
   if (text.match(/ありがとう|有難う/)) {
     message = username + "\nこちらこそ有難う御座います:sparkles:";
   }
+  if (text.match(/超SPEED|超スピード/)) {
+    message += "\n超SPEED!:bicyclist::bicyclist::bicyclist::bicyclist::bicyclist:";
+  }
   if (text.match(/\?|？/)) {
     message = username + "\n調べてみるので、少々お時間頂きます:pray:\n\n>" + text;
   }
