@@ -1,11 +1,18 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
+// sheet name
 var igFollowerSheet = bk.getSheetByName("Instagram Follwer Daily Count");
 var ngMessage = "cannot get";
 
+/***
+ * when open google spread sheet
+ */
 function onOpen() {
   showMenu();
 }
 
+/***
+ * show custom menu
+ */
 function showMenu() {
   var menu = [
     {name: "Get Instagram Follower Daily Count", functionName: "setIgFollowerData"}
@@ -13,8 +20,11 @@ function showMenu() {
   bk.addMenu("Custom Management", menu);
 }
 
+/***
+ * set instagarm follower data
+ */
 function setIgFollowerData() {
-  var dateColomn = getTodayClomun();
+  var dateColomn = getTodayColumn();
   var startRow = 3;
   var accounts = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 1).getValues().filter(function(e) {
     return e && e[0];
@@ -27,11 +37,21 @@ function setIgFollowerData() {
   }
 }
 
+/***
+ * get instagram account follower number
+ * @param accountUrl
+ * @returns {string}
+ */
 function getFollowerNumber(accountUrl) {
   var json = getJson(accountUrl);
   return json !== ngMessage? json.entry_data.ProfilePage[0].user.followed_by.count: ngMessage;
 }
 
+/***
+ * get json from instagram
+ * @param url
+ * @returns {string}
+ */
 function getJson(url) {
   try {
     var encodedURL = encodeURI(url);
@@ -45,7 +65,12 @@ function getJson(url) {
   }
 }
 
-function getTodayClomun() {
+/***
+ * get today column
+ * if the column is not exists, create new today column
+ * @returns {*}
+ */
+function getTodayColumn() {
   var today = dateFormat(new Date());
   var row = 1;
   var startColumn = 2;
@@ -64,6 +89,11 @@ function getTodayClomun() {
   }
 }
 
+/***
+ * format date jst
+ * @param date
+ * @returns {*}
+ */
 function dateFormat(date) {
   var formatType = 'yyyy/MM/dd';
   return Utilities.formatDate(date, 'JST', formatType);

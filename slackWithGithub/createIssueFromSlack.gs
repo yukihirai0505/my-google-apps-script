@@ -6,6 +6,12 @@ var REPO = "my-google-apps-script";
 var GITHUB_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('GITHUB_ACCESS_TOKEN');
 var CREATE_ISSUE_URL = "https://api.github.com/repos/"+OWNER+"/"+REPO+"/issues?access_token="+GITHUB_ACCESS_TOKEN;
 
+/***
+ * request to GitHub api to create a new Issue
+ * @param title
+ * @param body
+ * @param owner
+ */
 function sendGitHubRequest(title, body, owner) {
   var payload = JSON.stringify({
     "title": "【Help】" + title,
@@ -18,6 +24,10 @@ function sendGitHubRequest(title, body, owner) {
   return JSON.parse(UrlFetchApp.fetch(CREATE_ISSUE_URL, options).getContentText());
 }
 
+/***
+ * post the result to slack
+ * @param data
+ */
 function postToSlack(data) {
   var slackApp = SlackApp.create(SLACK_ACCESS_TOKEN);
   var options = {
@@ -28,6 +38,11 @@ function postToSlack(data) {
   slackApp.postMessage(data.channelId, data.message, options);
 }
 
+/***
+ * make json from slack out going api parameters and GitHub response
+ * @param e
+ * @returns {{message: string, channelId: *}}
+ */
 function makeResponse(e){
   var param = e.parameter;
   var channelId = param.channel_id;
@@ -43,14 +58,31 @@ function makeResponse(e){
   };
 }
 
+/***
+ * if the text is empty, undefined, null, it will be empty string.
+ * @param text
+ * @returns {string}
+ */
 function getText(text) {
   return text ? text: "";
 }
 
+/***
+ * slack out-going api will use this method.
+ * And get slack out-going api parameters and create pretending to work message,
+ * then post the message to slack as user.
+ * @param e
+ */
 function doGet(e) {
   return postToSlack( makeResponse(e) );
 }
 
+/***
+ * slack out-going api will use this method.
+ * And get slack out-going api parameters and create pretending to work message,
+ * then post the message to slack as user.
+ * @param e
+ */
 function doPost(e) {
   return postToSlack( makeResponse(e) );
 }

@@ -1,6 +1,13 @@
 // SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
 var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
 var SLACK_VERIFY_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_VERIFY_TOKEN');
+
+/***
+ * slack out-going api will use this method.
+ * And get slack out-going api parameters and create pretending to work message,
+ * then post the message to slack as user.
+ * @param e
+ */
 function doPost(e) {
   var param = e.parameter;
   // Verify slack post
