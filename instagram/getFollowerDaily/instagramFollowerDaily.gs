@@ -24,8 +24,8 @@ function showMenu() {
  * set instagarm follower data
  */
 function setIgFollowerData() {
-  var dateColomn = getTodayColumn();
-  var startRow = 3;
+  var dateColumn = getTodayColumn();
+  var startRow = 2;
   var accounts = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 1).getValues().filter(function(e) {
     return e && e[0];
   });
@@ -33,7 +33,7 @@ function setIgFollowerData() {
     var account = accounts[i];
     var accountUrl = "https://www.instagram.com/" + account[0];
     var followerNumber = getFollowerNumber(accountUrl);
-    igFollowerSheet.getRange(i+startRow, dateColomn.getColumn()).setValue(followerNumber);
+    igFollowerSheet.getRange(i+startRow, dateColumn.getColumn()).setValue(followerNumber);
   }
 }
 
