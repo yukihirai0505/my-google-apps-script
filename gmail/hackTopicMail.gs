@@ -66,8 +66,8 @@ function getReplyMessage() {
  * @param slackApp
  */
 function postToSlack(slackApp) {
-  var channelId = "test";
-  var message = "@hirai_yuki Sent reply message automatically";
+  var channelId = "@hirai_yuki";
+  var message = "Sent reply message automatically";
   var options = {
     link_names: 1
   };
