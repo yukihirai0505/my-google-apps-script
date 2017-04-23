@@ -1,15 +1,14 @@
+var BK = SpreadsheetApp.getActiveSpreadsheet();
+var REPLY_LIST = BK.getSheetByName("Reply Message List");
 var TARGET_MAIL_ADDRESS = "yukihirai0505@gmail.com";
+var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
 
 /***
- * TODO
- * 1. 返信したことがないトピメにランダムに賛辞を送る
- * 2. トピメをシートに保存する
- * [懸念点]
- * 1. 会社を休んだ時にもメールに返事する可能性がある(休まないように頑張る)
- * 2. MTG中などにも勝手に送られてしまうのでMTGに集中してないと思われる(でも、同じMTGに出ている人が気づくとしたらその人も集中していない証)
+ * Send reply message automatically
  */
 function replyToicMail() {
-  // 純粋な最初の1件を取得 => toに来ている + ccに含まれない + 未読 + 誰も返信していない + 再送じゃない
+  var slackApp = SlackApp.create(SLACK_ACCESS_TOKEN);
+  // Make query
   var query = 'to:(' + TARGET_MAIL_ADDRESS + ') -{cc:' + TARGET_MAIL_ADDRESS + '}  is:unread -subject:Re -再送';
   var threads = GmailApp.search(query);
   for (var i = 0, t = threads.length; i < t; i++) {
@@ -17,18 +16,59 @@ function replyToicMail() {
     var messages = thread.getMessages();
     for (var j = 0, m = messages.length; j < m; j++) {
       var message = messages[j];
-      // TODO: 返事する [ランダムで送る言葉は用意しておく50個くらいをシートに記載して使ったことがあるかもシートに残しておく]
-      var body = "thx!!\n\n\n\n" + message.getDate() + ' ' + message.getFrom() + '\n> ' + message.getPlainBody().replace(/\n/g, '\n> ');
-      message.replyAll(body);
+      // Mark read first
       message.markRead();
-      // TODO: 結果をSlackへ投稿
-
+      // Make body
+      var body = getReplyMessage() + "\n\n\n\n" + message.getDate() + ' ' + message.getFrom() + '\n> ' + message.getPlainBody().replace(/\n/g, '\n> ');
+      message.replyAll(body);
+      postToSlack(slackApp);
     }
   }
 }
 
 /***
- * TODO: 過去のトピメを月次でシートにまとめてみる
+ * Get random reply message
+ * @returns {*}
  */
-function crawlTopicMail() {
+function getReplyMessage() {
+  // Get reply messages
+  var lastRow = REPLY_LIST.getLastRow();
+  var replyList = REPLY_LIST.getRange(2, 1, lastRow, 2).getValues().filter(function(e) {
+    return e && e[0];
+  });
+  var notUsedReplyList = replyList.filter(function(e) {
+    return !e[1];
+  });
+  // If empty, init sheet
+  if (notUsedReplyList.length === 0) {
+    var initArr = [];
+    var arrNum  = lastRow-1;
+    for (var i = 0; i < arrNum; i++) {
+      initArr[i] = [""];
+    }
+    REPLY_LIST.getRange(2, 2, arrNum, 1).setValues(initArr);
+    return "Congratulations!!";
+  }
+  var randomReply = notUsedReplyList[Math.floor(Math.random() * notUsedReplyList.length)][0];
+  var randomIndex = "";
+  replyList.filter(function(e, i) {
+    if (e[0] === randomReply) {
+      randomIndex = i;
+    }
+  });
+  REPLY_LIST.getRange(2+randomIndex, 2).setValue("Sent");
+  return randomReply;
+}
+
+/***
+ * Post to slack
+ * @param slackApp
+ */
+function postToSlack(slackApp) {
+  var channelId = "test";
+  var message = "@hirai_yuki Sent reply message automatically";
+  var options = {
+    link_names: 1
+  };
+  slackApp.postMessage(channelId, message, options);
 }
