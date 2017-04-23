@@ -1,6 +1,7 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet();
 var REPLY_LIST = BK.getSheetByName("Reply Message List");
 var TARGET_MAIL_ADDRESS = "yukihirai0505@gmail.com";
+// SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
 var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
 
 /***
@@ -9,7 +10,7 @@ var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SL
 function replyToicMail() {
   var slackApp = SlackApp.create(SLACK_ACCESS_TOKEN);
   // Make query
-  var query = 'to:(' + TARGET_MAIL_ADDRESS + ') -{cc:' + TARGET_MAIL_ADDRESS + '}  is:unread -subject:Re -再送';
+  var query = 'to:(' + TARGET_MAIL_ADDRESS + ') -{cc:' + TARGET_MAIL_ADDRESS + '} is:unread -subject:Re -再送';
   var threads = GmailApp.search(query);
   for (var i = 0, t = threads.length; i < t; i++) {
     var thread = threads[i];
