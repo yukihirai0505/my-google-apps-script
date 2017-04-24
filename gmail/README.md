@@ -19,7 +19,7 @@ Then please add script editor this hackTopicMail.gs.
 You should set Slack Library.
 => Library Key: `M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO`
 
-Get the slack api token and set the token as property.
+Get the slack incoming api token and set the token as property.
 => `SLACK_ACCESS_TOKEN`
 
 Finally, you can set trigger.
