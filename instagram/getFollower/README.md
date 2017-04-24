@@ -1,6 +1,6 @@
 # Script for Instargam
 
-scripts for instagram
+scripts for getting instagram account follower.
 
 ## Usage
 
