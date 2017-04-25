@@ -1,7 +1,6 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
 var sheets = bk.getSheets();
-var allSheet = sheets[0];
-sheets.shift();
+var allSheet = sheets.shift();
 
 /***
  * Hook google spread sheet edit
