@@ -6,7 +6,6 @@ var allSheet = sheets.shift();
  * Hook google spread sheet edit
  */
 function onEdit() {
-  allSheet.deleteColumn(1);
   setValues();
 }
 
@@ -14,6 +13,8 @@ function onEdit() {
  * Set all sheet first column data to first sheet
  */
 function setValues() {
+  allSheet.insertColumnsAfter(1,1);
+  allSheet.deleteColumn(1);
   var total = 1;
   for (var i = 0, len = sheets.length; i < len; i++) {
     var values = getValues(sheets[i]);
