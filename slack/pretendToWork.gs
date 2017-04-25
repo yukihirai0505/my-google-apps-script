@@ -35,7 +35,10 @@ function doPost(e) {
     message += "\n超SPEED!:bicyclist::bicyclist::bicyclist::bicyclist::bicyclist:";
   }
   if (text.match(/\?|？/)) {
-    message = username + "\n調べてみるので、少々お時間頂きます:pray:\n\n>" + text;
+    message = username + "\n調べてみるので、少々お時間頂きます:bow:\n\n>" + text;
+  }
+  if (text.match(/[なに|何|いつ|どこ|誰|だれ|どのくらい|なぜ|どう](.*)[？|?]/)) {
+    message = "";
   }
   var options = {
     as_user: true,
