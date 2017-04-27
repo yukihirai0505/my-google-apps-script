@@ -10,7 +10,7 @@ So I've just come up with a great idea that is to send the reply mail automatica
 
 Prepare the `Reply Message List` google spread sheet first.
 
-The sheet has two column that is `Reply Message` And `Check`.
+The sheet has two columns that is `Reply Message` and `Check`.
 
 ![Reply Message List](https://cloud.githubusercontent.com/assets/9312373/25319378/42df9cc0-28d8-11e7-8327-00738b886c4b.png)
 
