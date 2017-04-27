@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>New Mail</title>
+</head>
+
+<body>
+<form>
+  <label for="subject">Subject: </label><br />
+  <input type="text" name="subject" id="subject" value="" size="35"><br /><br />
+  <label for="body">Message: </label><br />
+  <textarea rows="30" cols="70" name="body" id="body"></textarea><br />
+  <input type="button" onClick="formSubmit()" value="Submit" />
+</form>
+</body>
+<script type="text/javascript">
+  function formSubmit() {
+    google.script.run.newEmail(document.forms[0]);
+    google.script.host.close();
+  }
+</script>
+
+</html>
