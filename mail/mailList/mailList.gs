@@ -1,6 +1,9 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet();
 var MAIL_LIST = BK.getSheetByName("MailList");
 
+/***
+ * Hook google spread sheet open action
+ */
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('CustomMenu')
@@ -8,18 +11,30 @@ function onOpen() {
     .addToUi();
 }
 
+/***
+ * Display mail form html
+ */
 function openMailForm() {
   var html = HtmlService.createHtmlOutputFromFile('index.html');
   SpreadsheetApp.getUi()
     .showModalDialog(html, 'New Mail');
 }
 
+/***
+ * Get mail parameters
+ * @param form
+ */
 function newEmail(form) {
   var subject = form.subject;
   var body = form.body;
   sendMail(subject, body);
 }
 
+/***
+ * Send mails
+ * @param subject
+ * @param body
+ */
 function sendMail(subject, body) {
   var lastRow = MAIL_LIST.getLastRow();
   var userList = MAIL_LIST.getRange(2, 1, lastRow, 2).getValues().filter(function(e) {
