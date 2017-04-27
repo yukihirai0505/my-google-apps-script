@@ -1,7 +1,5 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet();
 var MAIL_LIST = BK.getSheetByName("MailList");
-var TO_ADDRESS = "example@gmail.com";
-var REPLY_TO_ADDRESS = "example@gmail.com";
 
 function onOpen() {
   SpreadsheetApp.getUi()
@@ -27,15 +25,17 @@ function sendMail(subject, body) {
   var userList = MAIL_LIST.getRange(2, 1, lastRow, 2).getValues().filter(function(e) {
     return e && e[0];
   });
+  var to = MAIL_LIST.getRange(2, 4).getValue();
+  var replyTo = MAIL_LIST.getRange(2, 5).getValue();
   var signature = MAIL_LIST.getRange(2, 3).getValue();
   for (var i = 0, len = userList.length; i < len; i++) {
     var user = userList[i];
     var userMail = user[0];
     var userName = user[1];
     var options = {
-      replyTo: REPLY_TO_ADDRESS,
+      replyTo: replyTo,
       bcc: userMail
     };
-    MailApp.sendEmail(TO_ADDRESS, subject.replace("%%name%%", userName), body.replace("%%name%%", userName) + '\n\n\n' + signature, options);
+    MailApp.sendEmail(to, subject.replace("%%name%%", userName), body.replace("%%name%%", userName) + '\n\n\n' + signature, options);
   }
 }
