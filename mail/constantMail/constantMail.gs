@@ -18,24 +18,28 @@ function onOpen() {
  * Send alert mail
  */
 function alertEmail() {
-  var mail = ALERT_MAIL.getRange(1, 2, 9, 1).getValues();
-  var alertBusinessDays = mail[6][0];
-  var deadlineBusinessDays = mail[7][0];
-  var alertDate = getBusinessDate(1, alertBusinessDays);
-  var deadline = getBusinessDate(1, deadlineBusinessDays);
-  if (alertDate === TODAY.getDate()) {
-    var to = mail[0][0];
-    var cc = mail[1][0];
-    var bcc = mail[2][0];
-    var subject = mail[3][0];
-    var body = mail[4][0];
-    var htmlBody = mail[5][0];
-    var options = {
-      cc: cc,
-      bcc: bcc,
-      htmlBody: replacePlaceholder(htmlBody, deadline)
-    };
-    MailApp.sendEmail(to, replacePlaceholder(subject, deadline), replacePlaceholder(body, deadline), options);
+  for (var i = 0, sheetLen = SHEETS.length; i < sheetLen; i++) {
+    var mail = SHEETS[i].getRange(1, 2, 9, 1).getValues();
+    var alertBusinessDays = mail[6][0].split(',');
+    var deadlineBusinessDate = mail[7][0];
+    var deadline = getBusinessDate(1, deadlineBusinessDate);
+    for (var j = 0, daysLen = alertBusinessDays.length; j < daysLen; j++) {
+      var alertDate = getBusinessDate(1, Number(alertBusinessDays[j]));
+      if (alertDate === TODAY.getDate()) {
+        var to = mail[0][0];
+        var cc = mail[1][0];
+        var bcc = mail[2][0];
+        var subject = mail[3][0];
+        var body = mail[4][0];
+        var htmlBody = mail[5][0];
+        var options = {
+          cc: cc,
+          bcc: bcc,
+          htmlBody: replacePlaceholder(htmlBody, deadline)
+        };
+        MailApp.sendEmail(to, replacePlaceholder(subject, deadline), replacePlaceholder(body, deadline), options);
+      }
+    }
   }
 }
 
@@ -43,15 +47,16 @@ function alertEmail() {
  * Send remind mail
  */
 function remindEmail() {
-  var mail = ALERT_MAIL.getRange(9, 2, 4, 1).getValues();
-  Logger.log(mail);
-  var remindBusinessDays = mail[0][0];
-  var remindMailTo = mail[1][0];
-  var remindDate = getBusinessDate(1, remindBusinessDays);
-  if (remindDate === TODAY.getDate()) {
-    var subject = mail[2][0];
-    var body = mail[3][0];
-    MailApp.sendEmail(remindMailTo, subject, body);
+  for (var i = 0, sheetLen = SHEETS.length; i < sheetLen; i++) {
+    var mail = SHEETS[i].getRange(9, 2, 4, 1).getValues();
+    var remindBusinessDays = mail[0][0];
+    var remindMailTo = mail[1][0];
+    var remindDate = getBusinessDate(1, remindBusinessDays);
+    if (remindDate === TODAY.getDate()) {
+      var subject = mail[2][0];
+      var body = mail[3][0];
+      MailApp.sendEmail(remindMailTo, subject, body);
+    }
   }
 }
 
@@ -72,9 +77,12 @@ function replacePlaceholder(value, deadline) {
  * @returns {number}
  */
 function getBusinessDate(from, afterNDays) {
+  if (!afterNDays) {
+    throw new Error("Please set afterNDays properly");
+  }
   var calendar = CalendarApp.getCalendarById('ja.japanese#holiday@group.v.calendar.google.com');
   var fromDate = new Date();
-  fromDate.setDate(from)
+  fromDate.setDate(from);
   var i = 0;
   var date = new Date();
   for (var dateCount = 0; dateCount !== afterNDays; i++) {
