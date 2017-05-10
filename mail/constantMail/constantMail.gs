@@ -20,11 +20,11 @@ function onOpen() {
 function alertEmail() {
   for (var i = 0, sheetLen = SHEETS.length; i < sheetLen; i++) {
     var mail = SHEETS[i].getRange(1, 2, 9, 1).getValues();
-    var alertBusinessDays = mail[6][0].split(',');
-    var deadlineBusinessDate = mail[7][0];
-    var deadline = getBusinessDate(1, deadlineBusinessDate);
+    var alertBusinessDays = String(mail[6][0]).split(',');
+    var deadlineBusinessDays = String(mail[7][0]).split(',');
     for (var j = 0, daysLen = alertBusinessDays.length; j < daysLen; j++) {
       var alertDate = getBusinessDate(1, Number(alertBusinessDays[j]));
+      var deadline = getBusinessDate(1, Number(deadlineBusinessDays[j]));
       if (alertDate === TODAY.getDate()) {
         var to = mail[0][0];
         var cc = mail[1][0];
@@ -51,11 +51,13 @@ function remindEmail() {
     var mail = SHEETS[i].getRange(9, 2, 4, 1).getValues();
     var remindBusinessDays = mail[0][0];
     var remindMailTo = mail[1][0];
-    var remindDate = getBusinessDate(1, remindBusinessDays);
-    if (remindDate === TODAY.getDate()) {
-      var subject = mail[2][0];
-      var body = mail[3][0];
-      MailApp.sendEmail(remindMailTo, subject, body);
+    if (remindBusinessDays && remindMailTo) {
+      var remindDate = getBusinessDate(1, remindBusinessDays);
+      if (remindDate === TODAY.getDate()) {
+        var subject = mail[2][0];
+        var body = mail[3][0];
+        MailApp.sendEmail(remindMailTo, subject, body);
+      }
     }
   }
 }
@@ -67,7 +69,7 @@ function remindEmail() {
  * @returns {XML|string}
  */
 function replacePlaceholder(value, deadline) {
-  return value.replace('%%month%%', TODAY.getMonth() + 1).replace('%%date%%', deadline);
+  return value.replace(/%%month%%/g, TODAY.getMonth() + 1).replace(/%%date%%/g, deadline);
 }
 
 /***
