@@ -13,7 +13,7 @@ Please check an attachment.\n\n";
     attachments: [makeImage(webSiteUrl)],
     name: 'sender name'
   };
-  MailApp.sendEmail(recipient, subject, body, options)
+  MailApp.sendEmail(recipient, subject, body, options);
 }
 
 /***

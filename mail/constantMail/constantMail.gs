@@ -1,6 +1,5 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet();
 var SHEETS = BK.getSheets();
-var ALERT_MAIL = SHEETS[0];
 var TODAY = new Date();
 
 /***
@@ -60,6 +59,28 @@ function remindEmail() {
       }
     }
   }
+}
+
+/***
+ * Send spreadsheet attachment
+ */
+function sendResult() {
+  var nowDate = Utilities.formatDate(new Date(), 'JST', 'yyyyMMdd');
+  var xlsxName = BK.getName() + "_" + nowDate + ".xlsx";
+  var fetchOpt = {
+    "headers" : { Authorization: "Bearer " + ScriptApp.getOAuthToken() },
+    "muteHttpExceptions" : true
+  };
+  var key = BK.getId();
+  var fetchUrl = "https://docs.google.com/feeds/download/spreadsheets/Export?key=" + key + "&amp;exportFormat=xlsx";
+  var attachmentFile = UrlFetchApp.fetch(fetchUrl, fetchOpt).getBlob().setName(xlsxName);
+  var recipient = "example@gmail.com";
+  var subject = 'subject';
+  var body = "body";
+  var options = {
+    attachments: [attachmentFile]
+  };
+  MailApp.sendEmail(recipient, subject, body, options);
 }
 
 /***
