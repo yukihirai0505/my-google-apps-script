@@ -1,0 +1,59 @@
+var holidayCalendar = CalendarApp.getCalendarById("ja.japanese#holiday@group.v.calendar.google.com");
+
+function shuichi() {
+  // Execute at 9 o'clock on Monday
+  var calendar = CalendarApp.getDefaultCalendar();
+  var tuesday = new Date(),
+    friday = new Date();
+  tuesday.addDays(1);
+  tuesday.setHours(18,0,0);
+  friday.addDays(4);
+  friday.setHours(23,59,59);
+  var weekEvents = calendar.getEvents(tuesday, friday);
+  var shuichiEvent = weekEvents.filter(function(e) {
+    if(e.getTitle().indexOf("シューイチ") !== -1) {
+      return e;
+    }
+  });
+  if (shuichiEvent.length === 0) {
+    for (var i = 4; i > 0; i--) {
+      var from = new Date(),
+        to = new Date();
+      from.addDays(i);
+      from.setHours(18,0,0);
+      to.addDays(i);
+      to.setHours(23,59,59);
+      var events = calendar.getEvents(from, to);
+      if (events.length === 0 && !isJapaneseHoliday(from)) {
+        var endTime = new Date();
+        endTime.addDays(i);
+        endTime.setHours(19,0,0);
+        var option = {
+          guests: "hoge@gmail.com",
+          sendInvites: true
+        };
+        calendar.createEvent("平井シューイチ", from, endTime, option);
+        break;
+      }
+    }
+  }
+}
+
+function isJapaneseHoliday(date) {
+  var year = date.getYear(),
+    month = date.getMonth(),
+    day = date.getDay;
+  var startDate = new Date();
+  startDate.setFullYear(year, month-1, day);
+  startDate.setHours(0, 0, 0, 0);
+  var endDate = new Date();
+  endDate.setFullYear(year, month-1, day);
+  endDate.setHours(23, 59, 59, 999);
+  var holidays =  holidayCalendar.getEvents(startDate, endDate);
+  return holidays.length !== 0;
+}
+
+Date.prototype.addDays = function(days) {
+  this.setDate(this.getDate() + parseInt(days));
+  return this;
+};
