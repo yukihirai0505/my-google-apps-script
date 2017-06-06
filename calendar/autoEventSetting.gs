@@ -1,4 +1,6 @@
-var holidayCalendar = CalendarApp.getCalendarById("ja.japanese#holiday@group.v.calendar.google.com");
+var HOLIDAY_CALENDAR = CalendarApp.getCalendarById("ja.japanese#holiday@group.v.calendar.google.com");
+var SHUICHI_TEXT = "平井シューイチ";
+var GUEST_MAIL_ADDRESS = "hoge@gmail.com";
 
 function shuichi() {
   // Execute at 9 o'clock on Monday
@@ -11,7 +13,7 @@ function shuichi() {
   friday.setHours(23,59,59);
   var weekEvents = calendar.getEvents(tuesday, friday);
   var shuichiEvent = weekEvents.filter(function(e) {
-    if(e.getTitle().indexOf("シューイチ") !== -1) {
+    if(e.getTitle().indexOf(SHUICHI_TEXT) !== -1) {
       return e;
     }
   });
@@ -29,10 +31,10 @@ function shuichi() {
         endTime.addDays(i);
         endTime.setHours(19,0,0);
         var option = {
-          guests: "hoge@gmail.com",
+          guests: GUEST_MAIL_ADDRESS,
           sendInvites: true
         };
-        calendar.createEvent("平井シューイチ", from, endTime, option);
+        calendar.createEvent(SHUICHI_TEXT, from, endTime, option);
         break;
       }
     }
@@ -49,7 +51,7 @@ function isJapaneseHoliday(date) {
   var endDate = new Date();
   endDate.setFullYear(year, month-1, day);
   endDate.setHours(23, 59, 59, 999);
-  var holidays =  holidayCalendar.getEvents(startDate, endDate);
+  var holidays =  HOLIDAY_CALENDAR.getEvents(startDate, endDate);
   return holidays.length !== 0;
 }
 
