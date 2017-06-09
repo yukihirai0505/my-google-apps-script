@@ -6,7 +6,7 @@ var postCheckSheet = bk.getSheetByName("check post");
  * Set Instagram data
  */
 function checkPostData() {
-  var postCheckRange = postCheckSheet.getRange(2, 1, postCheckSheet.getLastRow(), 5);
+  var postCheckRange = postCheckSheet.getRange(3, 1, postCheckSheet.getLastRow(), 5);
   var targetsData = postCheckRange.getValues();
   var data = [];
   for (var i = 0; i < targetsData.length; i++) {
