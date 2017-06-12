@@ -1,12 +1,16 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
 // sheet name
 var postCheckSheet = bk.getSheetByName("check post");
+var campaignDataSheet = bk.getSheetByName("campaign data");
+
+var campaignDataRange = campaignDataSheet.getRange(3, 1, campaignDataSheet.getLastRow(), 4);
+var campaignData = campaignDataRange.getValues();
 
 /***
  * Set Instagram data
  */
 function checkPostData() {
-  var postCheckRange = postCheckSheet.getRange(3, 1, postCheckSheet.getLastRow(), 5);
+  var postCheckRange = postCheckSheet.getRange(3, 1, postCheckSheet.getLastRow(), 4);
   var targetsData = postCheckRange.getValues();
   var data = [];
   for (var i = 0; i < targetsData.length; i++) {
@@ -17,15 +21,14 @@ function checkPostData() {
 
 /***
  * Check post data
- * @param post
+ * @param target
  * @returns {*}
  */
 function checkData(target) {
   try {
-    var bams = target[0];
-    var accountName = target[1];
-    var hashTag = target[2];
-    var pTime = target[3];
+    var accountName = target[0];
+    var campaignId = target[1];
+    var pTime = target[2];
     if (!accountName || pTime) {
       return target;
     }
@@ -36,11 +39,19 @@ function checkData(target) {
       mediaNodes = userData.media.nodes;
     for (var i = 0; i < mediaNodes.length; i++) {
       var node = mediaNodes[i];
-      if (~node.caption.indexOf(hashTag)) {
-        var postTime = new Date(node.date * 1000);
+      var campaign = campaignData.filter(function(element, index, array) {
+        if (element[0] === campaignId) {
+          return element;
+        }
+      })[0];
+      var hashTag = campaign[1];
+      var campaignStartDate = campaign[2];
+      var reportMailAddress = campaign[3];
+      var postTime = new Date(node.date * 1000);
+      if (~node.caption.indexOf(hashTag) && postTime > campaignStartDate) {
         var postUrl = 'https://www.instagram.com/p/' + node.code + '/';
-        sendReportMail(bams, accountName, postTime);
-        return [bams, accountName, hashTag, postTime, postUrl];
+        sendReportMail(accountName, postTime, reportMailAddress);
+        return [accountName, campaignId, postTime, postUrl];
       }
     }
     return target;
@@ -50,11 +61,10 @@ function checkData(target) {
   }
 }
 
-function sendReportMail(bams, accountName, postTime) {
-  var recipient = "hoge@gmail";
-  var subject = 'title';
-  var body = "body";
-  MailApp.sendEmail(recipient, subject, body);
+function sendReportMail(accountName, postTime, reportMailAddress) {
+  var subject = '';
+  var body = '';
+  MailApp.sendEmail(reportMailAddress, subject, body);
 }
 
 function getJson(response) {
