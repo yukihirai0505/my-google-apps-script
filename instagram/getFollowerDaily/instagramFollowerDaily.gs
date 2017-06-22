@@ -56,9 +56,8 @@ function getJson(url) {
   try {
     var encodedURL = encodeURI(url);
     var response = UrlFetchApp.fetch(encodedURL);
-    var myRegexp = /<script type="text\/javascript">window\._sharedData =([\s\S]*?)<\/script>/i;
-    var match    = myRegexp.exec(response.getContentText());
-    return JSON.parse(match[0].replace("<script type=\"text\/javascript\">window\._sharedData =", "").replace(";<\/script>" , ""));
+    var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
+    return JSON.parse(rs[1]);
   } catch(err) {
     Logger.log(err);
     return ngMessage;

@@ -76,7 +76,6 @@ function getPostData(post) {
 }
 
 function getJson(response) {
-  var myRegexp = /<script type="text\/javascript">window\._sharedData =([\s\S]*?)<\/script>/i;
-  var match = myRegexp.exec(response.getContentText());
-  return JSON.parse(match[0].replace("<script type=\"text\/javascript\">window\._sharedData =", "").replace(";<\/script>", ""));
+  var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
+  return JSON.parse(rs[1]);
 }
