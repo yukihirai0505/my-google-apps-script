@@ -12,7 +12,7 @@ function alertEmail() {
   var mail = SHEET.getRange(1, 2, 5, 1).getValues();
   var today = new Date();
   // get this week monday
-  var monday = new Date(today.setDate(today.getDate() - (today.getDay() - 1)));
+  var monday = new Date(new Date().setDate(today.getDate() - (today.getDay() - 1)));
   // get alert date this week
   var alertDate = getBusinessDate(monday.getDate(), 1);
   if (alertDate === today.getDate()) {
