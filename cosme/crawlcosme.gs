@@ -14,7 +14,7 @@ function showMenu() {
 }
 
 function setData() {
-  var dataRange = accountSheet.getRange(3, 2, accountSheet.getLastRow(), 4);
+  var dataRange = accountSheet.getRange(3, 2, accountSheet.getLastRow(), 5);
   var cosmeData = dataRange.getValues();
   var data = [];
   for (var i = 0; i < cosmeData.length; i++) {
@@ -33,15 +33,15 @@ function getCosmeData(data) {
     if (orgScore) {
       return data;
     }
-    Utilities.sleep(1000);
-    var isSp = link.indexOf('s.cosme.net') > 0;
-    var response = UrlFetchApp.fetch(link).getContentText();
+    //Utilities.sleep(1000);
+    var response = UrlFetchApp.fetch(link.replace('s.cosme.net', 'my.cosme.net')).getContentText();
     var scoreElem = getScore(response);
-    var isBuy = isSp ? getItemStatus(response).indexOf('購入品') > 0 : scoreElem.indexOf('buy') > 0;
+    var isBuy = scoreElem.indexOf('buy') > 0;
     var isRepeat = scoreElem ? scoreElem.indexOf('repeat') > 0 : false;
     var score = scoreElem ? removeTags(scoreElem).replace(/[^0-9]/g, '') : '';
+    var postDate = getPostDate(response);
     return [
-      link, isBuy ? '購入': 'モニター', isRepeat, score
+      link, isBuy ? '購入' : 'モニター', isRepeat, score, postDate
     ];
   } catch (err) {
     Logger.log(err);
@@ -58,8 +58,8 @@ function getScore(response) {
   return regex.exec(response)[0];
 }
 
-function getItemStatus(response) {
-  var regex = /<div class="item-status"(.|\s)*?\/div>/gi;
-  return regex.exec(response)[0];
+function getPostDate(response) {
+  var regex = /<p class="(mobile\-date|date)">(.*)?<\/p>/gi;
+  return regex.exec(response)[2];
 }
 
