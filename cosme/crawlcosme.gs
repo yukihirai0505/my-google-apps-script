@@ -59,7 +59,7 @@ function getScore(response) {
 }
 
 function getPostDate(response) {
-  var regex = /<p class="(mobile\-date|date)">(.*)?<\/p>/gi;
-  return regex.exec(response)[2];
+  var regex = /<div class="(rate\-sec|rating) clearfix">[\s\S]*?<p class="(mobile\-date|date)">(.*)?<\/p>[\s\S]*?<\/div>/gi;
+  return regex.exec(response)[3];
 }
 
