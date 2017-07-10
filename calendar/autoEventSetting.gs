@@ -1,3 +1,6 @@
+// SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
+var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
+
 var HOLIDAY_CALENDAR = CalendarApp.getCalendarById("ja.japanese#holiday@group.v.calendar.google.com");
 var SHUICHI_TEXT = "平井シューイチ";
 var GUEST_MAIL_ADDRESS = "hoge@gmail.com";
@@ -35,6 +38,14 @@ function shuichi() {
           sendInvites: true
         };
         calendar.createEvent(SHUICHI_TEXT, from, endTime, option);
+        var slackApp = SlackApp.create(SLACK_ACCESS_TOKEN);
+        var channelId = "[channel Id]";
+        var options = {
+          as_user: true,
+          link_names: 1
+        };
+        var message = "@here " + from.getDate() + "日にシューイチ取得します。";
+        slackApp.postMessage(channelId, message, options);
         break;
       }
     }
