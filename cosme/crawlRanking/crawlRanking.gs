@@ -100,10 +100,15 @@ function setPoints() {
   var rankLinks = rankingSheet.getRange(12, 3, 10, 1).getValues();
   for (var i = 0; i < rankLinks.length; i++) {
     var rankLink = rankLinks[i][0];
-    var response = UrlFetchApp.fetch(rankLink).getContentText('Shift_JIS');
-    var ratingValue = getRatingValue(response);
-    var point = getPoint(response);
-    rankingSheet.getRange(rankStartRow + i, 6, 1, 2).setValues([[ratingValue, point]]);
+    try {
+      var response = UrlFetchApp.fetch(rankLink).getContentText('Shift_JIS');
+      var ratingValue = getRatingValue(response);
+      var point = getPoint(response);
+      rankingSheet.getRange(rankStartRow + i, 6, 1, 2).setValues([[ratingValue, point]]);
+    } catch(err) {
+      var message = 'couldn\'t get';
+      rankingSheet.getRange(rankStartRow + i, 6, 1, 2).setValues([[message, message]]);
+    }
   }
 
 }
