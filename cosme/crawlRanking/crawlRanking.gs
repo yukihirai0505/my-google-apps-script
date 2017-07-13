@@ -14,10 +14,10 @@ function onOpen() {
 
 function showMenu() {
   var menu = [
-    {name: "Set client data", functionName: "setClientData"},
-    {name: "Set base data", functionName: "setBaseData"},
-    {name: "Set points", functionName: "setPoints"},
-    {name: "Set review counts", functionName: "setReviewCounts"},
+    {name: "1. setClientData", functionName: "setClientData"},
+    {name: "2. setBaseData", functionName: "setBaseData"},
+    {name: "3. setPoints", functionName: "setPoints"},
+    {name: "4. setReviewCounts", functionName: "setReviewCounts"}
   ];
   bk.addMenu("Custom Menu", menu);
 }
@@ -34,12 +34,12 @@ function setClientData() {
   setReviewCount(link, startRow);
 
   function getBrandName(response) {
-    var regex = /<span class="brd-name".*><a href.*>(.*)<\/a><\/span>/
+    var regex = /<span class="brd-name".*><a href.*>(.*)<\/a><\/span>/;
     return regex.exec(response)[1];
   }
 
   function getItemName(response) {
-    var regex = /<p class="pdct-name"><a href=".*">(.*)<\/a><\/p>/
+    var regex = /<p class="pdct-name"><a href=".*">(.*)<\/a><\/p>/;
     return regex.exec(response)[1];
   }
 }
@@ -97,7 +97,7 @@ function setBaseData() {
 
 function setPoints() {
 
-  var rankLinks = rankingSheet.getRange(12, 3, 10, 1).getValues();
+  var rankLinks = rankingSheet.getRange(rankStartRow, 3, 10, 1).getValues();
   for (var i = 0; i < rankLinks.length; i++) {
     var rankLink = rankLinks[i][0];
     try {
@@ -105,7 +105,7 @@ function setPoints() {
       var ratingValue = getRatingValue(response);
       var point = getPoint(response);
       rankingSheet.getRange(rankStartRow + i, 6, 1, 2).setValues([[ratingValue, point]]);
-    } catch(err) {
+    } catch (err) {
       var message = 'couldn\'t get';
       rankingSheet.getRange(rankStartRow + i, 6, 1, 2).setValues([[message, message]]);
     }
@@ -125,7 +125,7 @@ function getPoint(response) {
 
 
 function setReviewCounts() {
-  var rankLinks = rankingSheet.getRange(10, 3, 10, 1).getValues();
+  var rankLinks = rankingSheet.getRange(rankStartRow, 3, 10, 1).getValues();
   for (var i = 0; i < rankLinks.length; i++) {
     var rankLink = rankLinks[i][0];
     setReviewCount(rankLink, rankStartRow + i);
@@ -148,7 +148,7 @@ function setReviewCount(rankLink, rowIndex) {
       var response = UrlFetchApp.fetch(link).getContentText('Shift_JIS');
       reviewCounts[i] = getReviewCount(response);
     } catch (err) {
-      reviewCounts[i] = 'couldn\'t get'
+      reviewCounts[i] = 'couldn\'t get';
     }
   }
   rankingSheet.getRange(rowIndex, 8, 1, 6).setValues([reviewCounts]);
