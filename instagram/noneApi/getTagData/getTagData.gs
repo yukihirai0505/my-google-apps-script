@@ -29,12 +29,15 @@ function getTagData(hashTag) {
     return hashTag;
   }
   var tagUrl = encodeURI("https://www.instagram.com/explore/tags/" + tag.replace("#", ""));
-  var tagJson = getJson(UrlFetchApp.fetch(tagUrl));
-  var tagData = tagJson.entry_data.TagPage[0].tag,
-    tagCount = tagData.media.count;
   return [
-    tag, tagCount, tagUrl
+    tag, "=setTagCount(\""+tagUrl+"\")", tagUrl
   ];
+}
+
+function setTagCount(url) {
+  var tagJson = getJson(UrlFetchApp.fetch(url));
+  var tagData = tagJson.entry_data.TagPage[0].tag;
+  return tagCount = tagData.media.count;
 }
 
 function getJson(response) {
