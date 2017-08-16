@@ -266,7 +266,8 @@ function sendTopPostMail(tag, tagUrl, post, mediaCount, datetime) {
   var body = "hoge";
   var options = {
     attachments: [makeImage(tagUrl)],
-    name: '人気投稿掲載確認'
+    name: '人気投稿掲載確認',
+    noReply: true
   };
   MailApp.sendEmail(recipient, subject, body, options);
 }
