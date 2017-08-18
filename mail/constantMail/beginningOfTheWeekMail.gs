@@ -23,7 +23,8 @@ function alertEmail() {
     var body = mail[4][0];
     var options = {
       cc: cc,
-      bcc: bcc
+      bcc: bcc,
+      noReply: true
     };
     MailApp.sendEmail(to, subject, body, options);
   }
