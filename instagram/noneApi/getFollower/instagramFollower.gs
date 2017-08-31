@@ -20,45 +20,44 @@ function showMenu() {
   bk.addMenu("Custom Management", menu);
 }
 
-/***
- * set instagarm follower data
- */
 function setIgFollowerData() {
-  var startRow = 3;
-  var accounts = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 1).getValues().filter(function(e) {
-    return e && e[0];
-  });
+  var startRow = 2;
+  var range = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 3);
+  var accounts = range.getValues();
+  var datas = [];
   for(var i = 0; i < accounts.length; i++){
     var account = accounts[i];
-    var accountUrl = "https://www.instagram.com/" + account[0];
-    var followerNumber = getFollowerNumber(accountUrl);
-    igFollowerSheet.getRange(i+startRow, 2).setValue(followerNumber);
+    var accountName = account[0];
+    var accountUrl = "https://www.instagram.com/" + accountName;
+    try {
+      if (accountName && !account[2]) {
+        datas[i] = getData(accountUrl);
+      } else {
+        datas[i] = account;
+      }
+    } catch(e) {
+      Logger.log(e);
+      Utilities.sleep(1000);
+      try {
+        datas[i] = getData(accountUrl);
+      } catch (e2) {
+        Logger.log(e2);
+        datas[i] = [accountName, ngMessage, ""];
+      }
+    }
+  }
+  range.setValues(datas);
+  function getData(accountUrl) {
+    var info = getInstagramUserInfo(accountUrl);
+    var followerCount = info.followed_by.count;
+    var privateMessage = info.is_private ? "close": "open";
+    return [accountName, followerCount, privateMessage];
   }
 }
 
-/***
- * get instagram account follower number
- * @param accountUrl
- * @returns {string}
- */
-function getFollowerNumber(accountUrl) {
-  var json = getJson(accountUrl);
-  return json !== ngMessage? json.entry_data.ProfilePage[0].user.followed_by.count: ngMessage;
-}
-
-/***
- * get json from instagram
- * @param url
- * @returns {string}
- */
-function getJson(url) {
-  try {
-    var encodedURL = encodeURI(url);
-    var response = UrlFetchApp.fetch(encodedURL);
-    var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
-    return JSON.parse(rs[1]);
-  } catch(err) {
-    Logger.log(err);
-    return ngMessage;
-  }
+function getInstagramUserInfo(accountUrl) {
+  Utilities.sleep(1000);
+  var response = UrlFetchApp.fetch(encodeURI(accountUrl));
+  var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
+  return JSON.parse(rs[1]).entry_data.ProfilePage[0].user;
 }
