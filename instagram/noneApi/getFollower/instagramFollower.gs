@@ -29,34 +29,31 @@ function setIgFollowerData() {
     var account = accounts[i];
     var accountName = account[0];
     var accountUrl = "https://www.instagram.com/" + accountName;
-    try {
-      if (accountName && !account[2]) {
-        datas[i] = getData(accountUrl);
-      } else {
-        datas[i] = account;
-      }
-    } catch(e) {
-      Logger.log(e);
-      Utilities.sleep(1000);
-      try {
-        datas[i] = getData(accountUrl);
-      } catch (e2) {
-        Logger.log(e2);
-        datas[i] = [accountName, ngMessage, ""];
-      }
+    if (accountName && !account[2]) {
+      datas[i] = getData(accountName, accountUrl, true)
+    } else {
+      datas[i] = account;
     }
   }
   range.setValues(datas);
-  function getData(accountUrl) {
-    var info = getInstagramUserInfo(accountUrl);
-    var followerCount = info.followed_by.count;
-    var privateMessage = info.is_private ? "close": "open";
-    return [accountName, followerCount, privateMessage];
+  function getData(accountName, accountUrl, retryFlg) {
+    try {
+      var info = getInstagramUserInfo(accountUrl);
+      var followerCount = info.followed_by.count;
+      var privateMessage = info.is_private ? "close" : "open";
+      return [accountName, followerCount, privateMessage];
+    } catch (e) {
+      if (retryFlg === true) {
+        Utilities.sleep(1000);
+        return getData(accountName, accountUrl, false)
+      } else {
+        return [accountName, ngMessage, ""];
+      }
+    }
   }
 }
 
 function getInstagramUserInfo(accountUrl) {
-  Utilities.sleep(1000);
   var response = UrlFetchApp.fetch(encodeURI(accountUrl));
   var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
   return JSON.parse(rs[1]).entry_data.ProfilePage[0].user;
