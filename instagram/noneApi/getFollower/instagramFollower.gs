@@ -25,17 +25,14 @@ function setIgFollowerData() {
   var range = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 3);
   var accounts = range.getValues();
   var datas = [];
-  for(var i = 0; i < accounts.length; i++){
+  for (var i = 0; i < accounts.length; i++) {
     var account = accounts[i];
     var accountName = account[0];
     var accountUrl = "https://www.instagram.com/" + accountName;
-    if (accountName && !account[2]) {
-      datas[i] = getData(accountName, accountUrl, true)
-    } else {
-      datas[i] = account;
-    }
+    datas[i] = (accountName && !account[2]) ? getData(accountName, accountUrl, true) : account;
   }
   range.setValues(datas);
+
   function getData(accountName, accountUrl, retryFlg) {
     try {
       var info = getInstagramUserInfo(accountUrl);
@@ -55,6 +52,6 @@ function setIgFollowerData() {
 
 function getInstagramUserInfo(accountUrl) {
   var response = UrlFetchApp.fetch(encodeURI(accountUrl));
-  var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
+  var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
   return JSON.parse(rs[1]).entry_data.ProfilePage[0].user;
 }
