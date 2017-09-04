@@ -55,7 +55,7 @@ function shuichi() {
 function isJapaneseHoliday(date) {
   var year = date.getYear(),
     month = date.getMonth(),
-    day = date.getDay;
+    day = date.getDay();
   var startDate = new Date();
   startDate.setFullYear(year, month - 1, day);
   startDate.setHours(0, 0, 0, 0);
