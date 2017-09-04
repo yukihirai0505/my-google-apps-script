@@ -36,7 +36,6 @@ function getAccountData(account) {
     Utilities.sleep(3000);
     var userJson = getJson(UrlFetchApp.fetch("https://www.instagram.com/" + accountName + "/")),
       userData = userJson.entry_data.ProfilePage[0].user,
-      userAccountName = account,
       userName = userData.full_name,
       imageUrl = userData.profile_pic_url,
       bio = userData.biography,
@@ -44,7 +43,7 @@ function getAccountData(account) {
       followerNum = userData.followed_by.count,
       mediaCount = userData.media.count;
     return [
-      userAccountName, userName, imageUrl, bio, "=IMAGE(\"" + imageUrl + "\")", followsNum, followerNum, mediaCount, today
+      accountName, userName, imageUrl, bio, "=IMAGE(\"" + imageUrl + "\")", followsNum, followerNum, mediaCount, today
     ];
   } catch (err) {
     return account;

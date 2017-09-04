@@ -1,73 +1,75 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
 // sheet name
-var postCheckSheet = bk.getSheetByName("check post");
-var campaignDataSheet = bk.getSheetByName("campaign data");
+var igFollowerSheet = bk.getSheetByName("Instagram Follwer Daily Count");
 
-var campaignDataRange = campaignDataSheet.getRange(3, 1, campaignDataSheet.getLastRow(), 4);
-var campaignData = campaignDataRange.getValues();
-
-/***
- * Set Instagram data
- */
-function checkPostData() {
-  var postCheckRange = postCheckSheet.getRange(3, 1, postCheckSheet.getLastRow(), 4);
-  var targetsData = postCheckRange.getValues();
-  var data = [];
-  for (var i = 0; i < targetsData.length; i++) {
-    data[i] = checkData(targetsData[i]);
+function onOpen() {
+  function showMenu() {
+    var menu = [
+      {name: "Get Instagram Follower Daily Count", functionName: "setIgFollowerData"}
+    ];
+    bk.addMenu("Custom Management", menu);
   }
-  postCheckRange.setValues(data);
+
+  showMenu();
 }
 
-/***
- * Check post data
- * @param target
- * @returns {*}
- */
-function checkData(target) {
-  try {
-    var accountName = target[0];
-    var campaignId = target[1];
-    var pTime = target[2];
-    if (!accountName || pTime) {
-      return target;
-    }
+function setIgFollowerData() {
+  function getRange(columnNumber) {
+    var startRow = 2;
+    return igFollowerSheet.getRange(startRow, columnNumber, igFollowerSheet.getLastRow(), 1);
+  }
+
+  function getFollowerNumber(accountUrl) {
     // Set 1 seconds interval
     Utilities.sleep(1000);
-    var userJson = getJson(UrlFetchApp.fetch("https://www.instagram.com/" + accountName + "/")),
-      userData = userJson.entry_data.ProfilePage[0].user,
-      mediaNodes = userData.media.nodes;
-    for (var i = 0; i < mediaNodes.length; i++) {
-      var node = mediaNodes[i];
-      var campaign = campaignData.filter(function(element, index, array) {
-        if (element[0] === campaignId) {
-          return element;
-        }
-      })[0];
-      var hashTag = campaign[1];
-      var campaignStartDate = campaign[2];
-      var reportMailAddress = campaign[3];
-      var postTime = new Date(node.date * 1000);
-      if (~node.caption.indexOf(hashTag) && postTime > campaignStartDate) {
-        var postUrl = 'https://www.instagram.com/p/' + node.code + '/';
-        sendReportMail(accountName, postTime, reportMailAddress);
-        return [accountName, campaignId, postTime, postUrl];
-      }
-    }
-    return target;
-  } catch (err) {
-    Logger.log(err);
-    return target;
+    var response = UrlFetchApp.fetch(encodeURI(accountUrl));
+    var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
+    var json = JSON.parse(rs[1]);
+    return json.entry_data.ProfilePage[0].user.followed_by.count;
   }
+
+  function getTodayColumn() {
+    function dateFormat(date) {
+      var formatType = 'yyyy/MM/dd';
+      return Utilities.formatDate(date, 'JST', formatType);
+    }
+
+    var today = dateFormat(new Date());
+    var row = 1;
+    var startColumn = 2;
+    var lastColumn = igFollowerSheet.getLastColumn();
+    var values = igFollowerSheet.getRange(row, startColumn, row, lastColumn);
+    var dateIndex = "";
+    values.getValues()[0].filter(function (e, i) {
+      if (e && dateFormat(e) === today) {
+        dateIndex = i
+      }
+    });
+    if (dateIndex !== "") {
+      return igFollowerSheet.getRange(row, startColumn + dateIndex);
+    } else {
+      return igFollowerSheet.getRange(row, lastColumn + 1).setValue(today)
+    }
+  }
+
+  var dateColumn = getTodayColumn(),
+    accounts = getRange(1).getValues(),
+    data = [];
+  for (var i = 0; i < accounts.length; i++) {
+    var account = accounts[i];
+    var accountName = account[0];
+    var accountUrl = "https://www.instagram.com/" + accountName + "/";
+    if (!accountName) {
+      data[i] = account;
+      continue;
+    }
+    try {
+      data[i] = [getFollowerNumber(accountUrl)];
+    } catch (e) {
+      data[i] = ['could\'t get'];
+    }
+  }
+  getRange(dateColumn.getColumn()).setValues(data);
 }
 
-function sendReportMail(accountName, postTime, reportMailAddress) {
-  var subject = '';
-  var body = '';
-  MailApp.sendEmail(reportMailAddress, subject, body);
-}
 
-function getJson(response) {
-  var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
-  return JSON.parse(rs[1]);
-}
