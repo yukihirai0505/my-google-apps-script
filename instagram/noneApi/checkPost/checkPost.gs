@@ -39,7 +39,7 @@ function checkData(target) {
       mediaNodes = userData.media.nodes;
     for (var i = 0; i < mediaNodes.length; i++) {
       var node = mediaNodes[i];
-      var campaign = campaignData.filter(function(element, index, array) {
+      var campaign = campaignData.filter(function (element, index, array) {
         if (element[0] === campaignId) {
           return element;
         }

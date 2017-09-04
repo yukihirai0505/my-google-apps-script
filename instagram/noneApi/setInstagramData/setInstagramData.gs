@@ -47,7 +47,7 @@ function getPostData(post) {
     return post;
   }
   if (orgPostDate) {
-    var diff = (today.getTime() - orgPostDate.getTime())/(1000*60*60*24);
+    var diff = (today.getTime() - orgPostDate.getTime()) / (1000 * 60 * 60 * 24);
     if (diff > 7) {
       return post;
     }

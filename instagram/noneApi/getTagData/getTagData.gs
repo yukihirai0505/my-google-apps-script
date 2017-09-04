@@ -30,7 +30,7 @@ function getTagData(hashTag) {
   }
   var tagUrl = encodeURI("https://www.instagram.com/explore/tags/" + tag.replace("#", ""));
   return [
-    tag, "=setTagCount(\""+tagUrl+"\")", tagUrl
+    tag, "=setTagCount(\"" + tagUrl + "\")", tagUrl
   ];
 }
 

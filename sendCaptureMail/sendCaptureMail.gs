@@ -25,12 +25,12 @@ function makeImage(webSiteUrl) {
     .addColumn(Charts.ColumnType.STRING, 'dummy')
     .addRow(['<meta http-equiv="refresh" content="0; URL=' + webSiteUrl + '">'])
     .build();
-  
+
   var chart = Charts.newTableChart()
     .setDataTable(data)
     .setOption('allowHtml', true)
     .setDimensions(720, 1000)
     .build();
-  
+
   return chart.getAs('image/png').setName('capture.png');
 }

@@ -13,7 +13,7 @@ function onEdit() {
  * Set all sheet first column data to first sheet
  */
 function setValues() {
-  allSheet.insertColumnsAfter(1,1);
+  allSheet.insertColumnsAfter(1, 1);
   allSheet.deleteColumn(1);
   var total = 1;
   for (var i = 0, len = sheets.length; i < len; i++) {
@@ -21,7 +21,7 @@ function setValues() {
     values.push([""]);
     var totalRow = values.length;
     allSheet.getRange(total, 1, totalRow, 1).setValues(values);
-    total+=totalRow;
+    total += totalRow;
   }
 }
 
@@ -31,7 +31,7 @@ function setValues() {
  * @returns {Array.<T>|*}
  */
 function getValues(sheet) {
-  return sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues().filter(function(e) {
+  return sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues().filter(function (e) {
     return e && e[0];
   });
 }

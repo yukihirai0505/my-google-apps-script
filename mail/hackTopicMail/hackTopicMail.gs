@@ -34,16 +34,16 @@ function replyToicMail() {
 function getReplyMessage() {
   // Get reply messages
   var lastRow = REPLY_LIST.getLastRow();
-  var replyList = REPLY_LIST.getRange(2, 1, lastRow, 2).getValues().filter(function(e) {
+  var replyList = REPLY_LIST.getRange(2, 1, lastRow, 2).getValues().filter(function (e) {
     return e && e[0];
   });
-  var notUsedReplyList = replyList.filter(function(e) {
+  var notUsedReplyList = replyList.filter(function (e) {
     return !e[1];
   });
   // If empty, init sheet
   if (notUsedReplyList.length === 0) {
     var initArr = [];
-    var arrNum  = lastRow-1;
+    var arrNum = lastRow - 1;
     for (var i = 0; i < arrNum; i++) {
       initArr[i] = [""];
     }
@@ -52,12 +52,12 @@ function getReplyMessage() {
   }
   var randomReply = notUsedReplyList[Math.floor(Math.random() * notUsedReplyList.length)][0];
   var randomIndex = "";
-  replyList.filter(function(e, i) {
+  replyList.filter(function (e, i) {
     if (e[0] === randomReply) {
       randomIndex = i;
     }
   });
-  REPLY_LIST.getRange(2+randomIndex, 2).setValue("Sent");
+  REPLY_LIST.getRange(2 + randomIndex, 2).setValue("Sent");
   return randomReply;
 }
 

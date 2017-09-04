@@ -12,7 +12,7 @@ function getFollowers() {
   var token = "";
   var followers = requestFollowers("https://api.instagram.com/v1/users/self/followed-by?access_token=" + token, []);
   var to = "";
-  var body = followers.map(function(e) {
+  var body = followers.map(function (e) {
     return e.username;
   });
   MailApp.sendEmail(to, "followers", body);

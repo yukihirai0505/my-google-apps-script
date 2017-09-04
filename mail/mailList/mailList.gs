@@ -37,7 +37,7 @@ function newEmail(form) {
  */
 function sendMail(subject, body) {
   var lastRow = MAIL_LIST.getLastRow();
-  var userList = MAIL_LIST.getRange(2, 1, lastRow, 2).getValues().filter(function(e) {
+  var userList = MAIL_LIST.getRange(2, 1, lastRow, 2).getValues().filter(function (e) {
     return e && e[0];
   });
   var to = MAIL_LIST.getRange(2, 4).getValue();

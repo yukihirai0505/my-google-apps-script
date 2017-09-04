@@ -1,10 +1,10 @@
 // SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
 var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
-var OWNER= "yukihirai0505";
+var OWNER = "yukihirai0505";
 var REPO = "my-google-apps-script";
 // GitHub access token from https://github.com/settings/tokens
 var GITHUB_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('GITHUB_ACCESS_TOKEN');
-var CREATE_ISSUE_URL = "https://api.github.com/repos/"+OWNER+"/"+REPO+"/issues?access_token="+GITHUB_ACCESS_TOKEN;
+var CREATE_ISSUE_URL = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues?access_token=" + GITHUB_ACCESS_TOKEN;
 
 /***
  * request to GitHub api to create a new Issue
@@ -15,11 +15,11 @@ var CREATE_ISSUE_URL = "https://api.github.com/repos/"+OWNER+"/"+REPO+"/issues?a
 function sendGitHubRequest(title, body, owner) {
   var payload = JSON.stringify({
     "title": "【Help】" + title,
-    "body" : "## Summary\n\n" + body +"\n\nMade by: "+ owner
+    "body": "## Summary\n\n" + body + "\n\nMade by: " + owner
   });
   var options = {
-    "method" : "POST",
-    "payload" : payload
+    "method": "POST",
+    "payload": payload
   };
   return JSON.parse(UrlFetchApp.fetch(CREATE_ISSUE_URL, options).getContentText());
 }
@@ -43,7 +43,7 @@ function postToSlack(data) {
  * @param e
  * @returns {{message: string, channelId: *}}
  */
-function makeResponse(e){
+function makeResponse(e) {
   var param = e.parameter;
   var channelId = param.channel_id;
   var owner = param.user_name;
@@ -64,7 +64,7 @@ function makeResponse(e){
  * @returns {string}
  */
 function getText(text) {
-  return text ? text: "";
+  return text ? text : "";
 }
 
 /***
@@ -74,7 +74,7 @@ function getText(text) {
  * @param e
  */
 function doGet(e) {
-  return postToSlack( makeResponse(e) );
+  return postToSlack(makeResponse(e));
 }
 
 /***
@@ -84,5 +84,5 @@ function doGet(e) {
  * @param e
  */
 function doPost(e) {
-  return postToSlack( makeResponse(e) );
+  return postToSlack(makeResponse(e));
 }

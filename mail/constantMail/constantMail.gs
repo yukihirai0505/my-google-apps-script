@@ -68,8 +68,8 @@ function sendResult() {
   var nowDate = Utilities.formatDate(new Date(), 'JST', 'yyyyMMdd');
   var xlsxName = BK.getName() + "_" + nowDate + ".xlsx";
   var fetchOpt = {
-    "headers" : { Authorization: "Bearer " + ScriptApp.getOAuthToken() },
-    "muteHttpExceptions" : true
+    "headers": {Authorization: "Bearer " + ScriptApp.getOAuthToken()},
+    "muteHttpExceptions": true
   };
   var key = BK.getId();
   var fetchUrl = "https://docs.google.com/feeds/download/spreadsheets/Export?key=" + key + "&amp;exportFormat=xlsx";
