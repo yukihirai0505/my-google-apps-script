@@ -28,7 +28,7 @@ function setIgFollowerData() {
   for (var i = 0; i < accounts.length; i++) {
     var account = accounts[i];
     var accountName = account[0];
-    var accountUrl = "https://www.instagram.com/" + accountName;
+    var accountUrl = "https://www.instagram.com/" + accountName + "/";
     datas[i] = (accountName && !account[2]) ? getData(accountName, accountUrl, true) : account;
   }
   range.setValues(datas);
