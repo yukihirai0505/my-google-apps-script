@@ -57,12 +57,12 @@ function isJapaneseHoliday(targetDate) {
     month = targetDate.getMonth(),
     date = targetDate.getDate();
   var startDate = new Date();
-  startDate.setFullYear(year, month-1, date);
+  startDate.setFullYear(year, month - 1, date);
   startDate.setHours(0, 0, 0, 0);
   var endDate = new Date();
-  endDate.setFullYear(year, month-1, date);
+  endDate.setFullYear(year, month - 1, date);
   endDate.setHours(23, 59, 59, 999);
-  var holidays =  HOLIDAY_CALENDAR.getEvents(startDate, endDate);
+  var holidays = HOLIDAY_CALENDAR.getEvents(startDate, endDate);
   return holidays.length !== 0;
 }
 
