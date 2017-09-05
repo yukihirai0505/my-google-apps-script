@@ -13,7 +13,12 @@ function onOpen() {
   showMenu();
 }
 
+function clearSheetData() {
+  sheet.getRange(2, 1, sheet.getLastRow(), 2).clear();
+}
+
 function setShuichiData() {
+  clearSheetData();
   var calendars = CalendarApp.getAllCalendars().filter(function (e) {
     return e.getName().match(/@/);
   });
@@ -46,7 +51,7 @@ function getShuichiData(calendar) {
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     var title = event.getTitle();
-    if (title.match(/シューイチ|ｼｭｰｲﾁ|シュウイチ/) && !title.match(/申請/) && event.getOriginalCalendarId() === calendar.getId()) {
+    if (title.match(/シューイチ|ｼｭｰｲﾁ|シュウイチ|しゅーいち|週一/) && !title.match(/申請/) && event.getOriginalCalendarId() === calendar.getId()) {
       var dateStr = dateFormat(event.getStartTime());
       var reg = new RegExp(dateStr);
       // if shuichiStr does not contain same dateStr
