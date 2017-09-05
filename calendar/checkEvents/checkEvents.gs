@@ -14,7 +14,9 @@ function onOpen() {
 }
 
 function setShuichiData() {
-  var calendars = CalendarApp.getAllCalendars();
+  var calendars = CalendarApp.getAllCalendars().filter(function (e) {
+    return e.getName().match(/@/);
+  });
   var data = [];
   for (var i = 0; i < calendars.length; i++) {
     var calendar = calendars[i];
@@ -28,6 +30,7 @@ function getShuichiData(calendar) {
     var formatType = 'yyyy/MM/dd';
     return Utilities.formatDate(date, 'JST', formatType);
   }
+
   // 月初
   var startDate = new Date();
   startDate.setDate(1);
@@ -42,9 +45,9 @@ function getShuichiData(calendar) {
   var shuichiStr = '';
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    if (event.getTitle().match(/シューイチ|ｼｭｰｲﾁ|シュウイチ/) && event.getOriginalCalendarId() === calendar.getId()) {
+    if (event.getTitle().match(/シューイチ|ｼｭｰｲﾁ|シュウイチ/) && !event.getTitle().match(/申請/) && event.getOriginalCalendarId() === calendar.getId()) {
       shuichiStr += dateFormat(event.getStartTime()) + ',';
     }
   }
-  return [calendar.getName(), shuichiStr.slice(0,-1)];
+  return [calendar.getName(), shuichiStr.slice(0, -1)];
 }
