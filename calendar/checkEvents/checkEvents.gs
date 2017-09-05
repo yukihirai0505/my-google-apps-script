@@ -1,13 +1,13 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
-var sheet = bk.getSheetByName("シューイチ確認");
+var sheet = bk.getSheetByName('shuichi');
 
 
 function onOpen() {
   function showMenu() {
     var menu = [
-      {name: "シューイチ確認", functionName: "setShuichiData"}
+      {name: 'シューイチ確認', functionName: 'setShuichiData'}
     ];
-    bk.addMenu("カスタムメニュー", menu);
+    bk.addMenu('カスタムメニュー', menu);
   }
 
   showMenu();
@@ -31,12 +31,12 @@ function getShuichiData(calendar) {
     return Utilities.formatDate(date, 'JST', formatType);
   }
 
-  // 月初
+  // beginning of the month
   var startDate = new Date();
   startDate.setDate(1);
   startDate.setHours(0, 0, 0, 0);
   var endDate = new Date();
-  // 月末
+  // end of the month
   endDate.setDate(1);
   endDate.setMonth(endDate.getMonth() + 1);
   endDate.setDate(0);
@@ -45,8 +45,14 @@ function getShuichiData(calendar) {
   var shuichiStr = '';
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
-    if (event.getTitle().match(/シューイチ|ｼｭｰｲﾁ|シュウイチ/) && !event.getTitle().match(/申請/) && event.getOriginalCalendarId() === calendar.getId()) {
-      shuichiStr += dateFormat(event.getStartTime()) + ',';
+    var title = event.getTitle();
+    if (title.match(/シューイチ|ｼｭｰｲﾁ|シュウイチ/) && !title.match(/申請/) && event.getOriginalCalendarId() === calendar.getId()) {
+      var dateStr = dateFormat(event.getStartTime());
+      var reg = new RegExp(dateStr);
+      // if shuichiStr does not contain same dateStr
+      if (!shuichiStr.match(reg)) {
+        shuichiStr += dateStr + ',';
+      }
     }
   }
   return [calendar.getName(), shuichiStr.slice(0, -1)];
