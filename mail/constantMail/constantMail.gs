@@ -34,7 +34,8 @@ function alertEmail() {
         var options = {
           cc: cc,
           bcc: bcc,
-          htmlBody: replacePlaceholder(htmlBody, deadline)
+          htmlBody: replacePlaceholder(htmlBody, deadline),
+          name: 'hogehoge',
         };
         MailApp.sendEmail(to, replacePlaceholder(subject, deadline), replacePlaceholder(body, deadline), options);
       }
