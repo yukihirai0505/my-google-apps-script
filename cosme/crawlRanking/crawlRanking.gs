@@ -24,6 +24,8 @@ function setClientData() {
   var link = RANKING_SHEET.getRange(startRow, 3).getValue();
   if (link) {
     RANKING_SHEET.getRange(startRow, 4, 1, 10).clear().setValues([getReviewData(link)]);
+  } else {
+    Browser.msgBox('please input client review link');
   }
 }
 
@@ -63,12 +65,17 @@ function setCategoryData() {
     RANKING_SHEET.getRange(RANKING_START_ROW, 3, rankNum, 11).setValues(data);
   }
 
-  var response = UrlFetchApp.fetch(RANKING_SHEET.getRange(URL_ROW, 3).getValue()).getContentText('Shift_JIS');
-  setTargetCategory(response);
-  setRanking(response);
+  var link = RANKING_SHEET.getRange(URL_ROW, 3).getValue();
+  if (link) {
+    var response = UrlFetchApp.fetch(link).getContentText('Shift_JIS');
+    setTargetCategory(response);
+    setRanking(response);
+  } else {
+    Browser.msgBox('please input category link');
+  }
 }
 
-function getReviewData(link) {
+function getReviewData(baseLink) {
   function getBrandName(response) {
     var regex = /<span class="brd-name".*><a href.*>(.*)<\/a><\/span>/
     return regex.exec(response)[1];
@@ -89,19 +96,19 @@ function getReviewData(link) {
     return regex.exec(response)[1];
   }
 
-  function getReviewCounts(rankLink) {
+  function getReviewCounts() {
     function getReviewCount(response) {
       var regex = /<span class="count cnt" itemprop="reviewCount">(.*)<\/span>/;
       return regex.exec(response)[1];
     }
 
     var links = [
-      rankLink + RD3_PATH,
-      rankLink + RD3_PATH + MSF_PATH,
-      rankLink + RD2_PATH,
-      rankLink + RD2_PATH + MSF_PATH,
-      rankLink + RD1_PATH,
-      rankLink + RD1_PATH + MSF_PATH
+      baseLink + RD3_PATH,
+      baseLink + RD3_PATH + MSF_PATH,
+      baseLink + RD2_PATH,
+      baseLink + RD2_PATH + MSF_PATH,
+      baseLink + RD1_PATH,
+      baseLink + RD1_PATH + MSF_PATH
     ];
     var reviewCounts = [];
     for (var i = 0; i < links.length; i++) {
@@ -117,9 +124,9 @@ function getReviewData(link) {
   }
 
   var result,
-    reviewCounts = getReviewCounts(link);
+    reviewCounts = getReviewCounts();
   try {
-    var response = UrlFetchApp.fetch(link).getContentText('Shift_JIS');
+    var response = UrlFetchApp.fetch(baseLink).getContentText('Shift_JIS');
     var brandName = getBrandName(response);
     var itemName = getItemName(response);
     var ratingValue = getRatingValue(response);
