@@ -21,19 +21,14 @@ function showMenu() {
 }
 
 function setIgFollowerData() {
-  var startRow = 2;
-  var range = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 3);
-  var accounts = range.getValues();
-  var datas = [];
-  for (var i = 0; i < accounts.length; i++) {
-    var account = accounts[i];
-    var accountName = account[0];
-    var accountUrl = "https://www.instagram.com/" + accountName + "/";
-    datas[i] = (accountName && !account[2]) ? getData(accountName, accountUrl, true) : account;
-  }
-  range.setValues(datas);
-
   function getData(accountName, accountUrl, retryFlg) {
+    function getInstagramUserInfo(accountUrl) {
+      var response = UrlFetchApp.fetch(encodeURI(accountUrl));
+      var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
+      var json = JSON.parse(rs[1]);
+      return json.entry_data.ProfilePage[0].user;
+    }
+
     try {
       var info = getInstagramUserInfo(accountUrl);
       var followerCount = info.followed_by.count;
@@ -48,10 +43,16 @@ function setIgFollowerData() {
       }
     }
   }
-}
 
-function getInstagramUserInfo(accountUrl) {
-  var response = UrlFetchApp.fetch(encodeURI(accountUrl));
-  var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
-  return JSON.parse(rs[1]).entry_data.ProfilePage[0].user;
+  var startRow = 2;
+  var range = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 3);
+  var accounts = range.getValues();
+  var data = [];
+  for (var i = 0; i < accounts.length; i++) {
+    var account = accounts[i];
+    var accountName = account[0];
+    var accountUrl = "https://www.instagram.com/" + accountName + "/";
+    data[i] = (accountName && !account[2]) ? getData(accountName, accountUrl, true) : account;
+  }
+  range.setValues(data);
 }
