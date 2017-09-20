@@ -22,7 +22,7 @@ function showMenu() {
 
 function setIgFollowerData() {
   function getData(accountName, accountUrl, retryFlg) {
-    function getInstagramUserInfo(accountUrl) {
+    function getInstagramUserInfo() {
       var response = UrlFetchApp.fetch(encodeURI(accountUrl));
       var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
       var json = JSON.parse(rs[1]);
@@ -30,7 +30,7 @@ function setIgFollowerData() {
     }
 
     try {
-      var info = getInstagramUserInfo(accountUrl);
+      var info = getInstagramUserInfo();
       var followerCount = info.followed_by.count;
       var privateMessage = info.is_private ? "close" : "open";
       return [accountName, followerCount, privateMessage];
