@@ -6,4 +6,4 @@ This program will create Google Calendar Event.
 ## Usage
 
 Prepare google apps script first.
-Then copy and paste this script instagramFollower.gs to the script.
+Then copy and paste this script autoEventSetting.gs to the script.

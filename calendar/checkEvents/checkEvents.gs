@@ -1,7 +1,6 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
 var sheet = bk.getSheetByName('shuichi');
 
-
 function onOpen() {
   function showMenu() {
     var menu = [
@@ -9,7 +8,7 @@ function onOpen() {
     ];
     bk.addMenu('カスタムメニュー', menu);
   }
-
+  
   showMenu();
 }
 
@@ -35,7 +34,7 @@ function getShuichiData(calendar) {
     var formatType = 'yyyy/MM/dd';
     return Utilities.formatDate(date, 'JST', formatType);
   }
-
+  
   // beginning of the month
   var startDate = new Date();
   startDate.setDate(1);
