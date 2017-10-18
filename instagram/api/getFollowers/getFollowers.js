@@ -15,5 +15,5 @@ function getFollowers() {
   var body = followers.map(function (e) {
     return e.username;
   });
-  MailApp.sendEmail(to, "followers", body);
+  MailApp.sendEmail(to, "followers", body.join('\n'));
 }
