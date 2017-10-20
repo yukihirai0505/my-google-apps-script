@@ -7,11 +7,9 @@ var today = new Date();
  */
 function setInstagramAccountData() {
   var accountRange = accountSheet.getRange(3, 2, accountSheet.getLastRow(), 9);
-  var accounts = accountRange.getValues();
-  var data = [];
-  for (var i = 0; i < accounts.length; i++) {
-    data[i] = getAccountData(accounts[i]);
-  }
+  var data = accountRange.getValues().map(function(e) {
+    return getAccountData(accounts);
+  });
   accountRange.setValues(data);
 }
 

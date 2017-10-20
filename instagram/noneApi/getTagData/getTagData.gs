@@ -15,12 +15,10 @@ function showMenu() {
 
 function setTagData() {
   var range = hashTagSheet.getRange(2, 1, hashTagSheet.getLastRow(), 3);
-  var hashTags = range.getValues();
-  var datas = [];
-  for (var i = 0; i < hashTags.length; i++) {
-    datas[i] = getTagData(hashTags[i]);
-  }
-  range.setValues(datas);
+  var data = range.getValues().map(function (e) {
+    return getTagData(e);
+  });
+  range.setValues(data);
 }
 
 function getTagData(hashTag) {

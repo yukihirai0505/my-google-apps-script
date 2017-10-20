@@ -46,13 +46,10 @@ function setIgFollowerData() {
 
   var startRow = 2;
   var range = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 3);
-  var accounts = range.getValues();
-  var data = [];
-  for (var i = 0; i < accounts.length; i++) {
-    var account = accounts[i];
-    var accountName = account[0];
+  var data = range.getValues().map(function (e) {
+    var accountName = e[0];
     var accountUrl = "https://www.instagram.com/" + accountName + "/";
-    data[i] = (accountName && !account[2]) ? getData(accountName, accountUrl, true) : account;
-  }
+    return (accountName && !e[2]) ? getData(accountName, accountUrl, true) : e;
+  });
   range.setValues(data);
 }

@@ -25,12 +25,10 @@ function showMenu() {
  */
 function setInstagramData() {
   var postRange = sheet.getRange(3, 2, sheet.getLastRow(), 12);
-  var posts = postRange.getValues();
-  var datas = [];
-  for (var i = 0; i < posts.length; i++) {
-    datas[i] = getPostData(posts[i]);
-  }
-  postRange.setValues(datas);
+  var data = postRange.getValues().map(function (e) {
+    return getPostData(e);
+  });
+  postRange.setValues(data);
 }
 
 /***
