@@ -21,11 +21,9 @@ function setShuichiData() {
   var calendars = CalendarApp.getAllCalendars().filter(function (e) {
     return e.getName().match(/@/);
   });
-  var data = [];
-  for (var i = 0; i < calendars.length; i++) {
-    var calendar = calendars[i];
-    data[i] = getShuichiData(calendar);
-  }
+  var data = calendars.map(function (calendar) {
+    return getShuichiData(calendar);
+  });
   sheet.getRange(2, 1, data.length, 2).setValues(data);
 }
 
