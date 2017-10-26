@@ -2,7 +2,7 @@ var BK = SpreadsheetApp.getActiveSpreadsheet();
 var MAIL_LIST = BK.getSheetByName("MailList");
 
 /***
- * Hook google spread sheet open action
+ * Hook google spread SHEET open action
  */
 function onOpen() {
   SpreadsheetApp.getUi()

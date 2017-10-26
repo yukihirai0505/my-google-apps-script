@@ -1,10 +1,10 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
-// sheet name
+// SHEET name
 var igFollowerSheet = bk.getSheetByName("Instagram Follwer Count");
 var ngMessage = "cannot get";
 
 /***
- * when open google spread sheet
+ * when open google spread SHEET
  */
 function onOpen() {
   showMenu();

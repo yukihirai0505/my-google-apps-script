@@ -3,7 +3,7 @@ var SHEETS = BK.getSheets();
 var TODAY = new Date();
 
 /***
- * Hook google spread sheet open action
+ * Hook google spread SHEET open action
  */
 function onOpen() {
   SpreadsheetApp.getUi()

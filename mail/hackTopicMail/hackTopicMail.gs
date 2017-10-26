@@ -40,7 +40,7 @@ function getReplyMessage() {
   var notUsedReplyList = replyList.filter(function (e) {
     return !e[1];
   });
-  // If empty, init sheet
+  // If empty, init SHEET
   if (notUsedReplyList.length === 0) {
     var initArr = [];
     var arrNum = lastRow - 1;

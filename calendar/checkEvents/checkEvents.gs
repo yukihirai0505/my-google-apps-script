@@ -1,30 +1,26 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-var sheet = bk.getSheetByName('shuichi');
+var BK = SpreadsheetApp.getActiveSpreadsheet();
+var SHEET = BK.getSheetByName('shuichi');
 
 function onOpen() {
   function showMenu() {
     var menu = [
       {name: 'シューイチ確認', functionName: 'setShuichiData'}
     ];
-    bk.addMenu('カスタムメニュー', menu);
+    BK.addMenu('カスタムメニュー', menu);
   }
   
   showMenu();
 }
 
-function clearSheetData() {
-  sheet.getRange(2, 1, sheet.getLastRow(), 2).clear();
-}
-
 function setShuichiData() {
-  clearSheetData();
   var calendars = CalendarApp.getAllCalendars().filter(function (e) {
     return e.getName().match(/@/);
   });
   var data = calendars.map(function (calendar) {
     return getShuichiData(calendar);
   });
-  sheet.getRange(2, 1, data.length, 2).setValues(data);
+  SHEET.getRange(2, 1, SHEET.getLastRow(), 2).clear();
+  SHEET.getRange(2, 1, data.length, 2).setValues(data);
 }
 
 function getShuichiData(calendar) {

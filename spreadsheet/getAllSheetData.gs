@@ -3,14 +3,14 @@ var sheets = bk.getSheets();
 var allSheet = sheets.shift();
 
 /***
- * Hook google spread sheet edit
+ * Hook google spread SHEET edit
  */
 function onEdit() {
   setValues();
 }
 
 /***
- * Set all sheet first column data to first sheet
+ * Set all SHEET first column data to first SHEET
  */
 function setValues() {
   allSheet.insertColumnsAfter(1, 1);
@@ -26,7 +26,7 @@ function setValues() {
 }
 
 /***
- * get sheet first column data
+ * get SHEET first column data
  * @param sheet
  * @returns {Array.<T>|*}
  */

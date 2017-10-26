@@ -1,5 +1,5 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
-// sheet name
+// SHEET name
 var igFollowerSheet = bk.getSheetByName("Instagram Follwer Daily Count");
 
 function onOpen() {

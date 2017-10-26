@@ -1,5 +1,5 @@
 var bk = SpreadsheetApp.getActiveSpreadsheet();
-// sheet name
+// SHEET name
 var postCheckSheet = bk.getSheetByName("check post");
 var campaignDataSheet = bk.getSheetByName("campaign data");
 
