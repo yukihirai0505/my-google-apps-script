@@ -52,7 +52,7 @@ function getPostData(post) {
   }
   // Set 3 seconds interval
   Utilities.sleep(3000);
-  var postJson = getJson(UrlFetchApp.fetch(postUrl));
+  var postJson = getJson(UrlFetchApp.fetch(postUrl, { muteHttpExceptions: true }));
   var postData = postJson.entry_data.PostPage[0].graphql.shortcode_media,
     ownerData = postJson.entry_data.PostPage[0].graphql.shortcode_media.owner,
     imageUrl = postData.display_url,

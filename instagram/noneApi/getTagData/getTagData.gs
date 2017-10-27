@@ -33,7 +33,7 @@ function getTagData(hashTag) {
 }
 
 function setTagCount(url) {
-  var tagJson = getJson(UrlFetchApp.fetch(url));
+  var tagJson = getJson(UrlFetchApp.fetch(url, { muteHttpExceptions: true }));
   var tagData = tagJson.entry_data.TagPage[0].tag;
   return tagCount = tagData.media.count;
 }

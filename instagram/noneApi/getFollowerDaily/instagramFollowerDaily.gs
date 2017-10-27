@@ -21,7 +21,7 @@ function setIgFollowerData() {
   function getFollowerNumber(accountUrl) {
     // Set 1 seconds interval
     Utilities.sleep(1000);
-    var response = UrlFetchApp.fetch(encodeURI(accountUrl));
+    var response = UrlFetchApp.fetch(encodeURI(accountUrl), { muteHttpExceptions: true });
     var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
     var json = JSON.parse(rs[1]);
     return json.entry_data.ProfilePage[0].user.followed_by.count;

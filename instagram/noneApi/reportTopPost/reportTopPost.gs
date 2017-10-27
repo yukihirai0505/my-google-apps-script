@@ -68,7 +68,7 @@ function getTop() {
  * InstagramからJsonを取得する
  */
 function getJson(url) {
-  var response = UrlFetchApp.fetch(url);
+  var response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
   var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
   return JSON.parse(rs[1]);
 }
