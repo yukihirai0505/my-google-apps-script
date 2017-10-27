@@ -1,6 +1,6 @@
 // SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
-var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
-var SLACK_VERIFY_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_VERIFY_TOKEN');
+var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN'),
+  SLACK_VERIFY_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_VERIFY_TOKEN');
 
 /***
  * slack out-going api will use this method.

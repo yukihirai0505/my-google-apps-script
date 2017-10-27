@@ -1,5 +1,5 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-var accountSheet = bk.getSheetByName("cosme");
+var BK = SpreadsheetApp.getActiveSpreadsheet();
+var ACCOUNT_SHEET = BK.getSheetByName("cosme");
 
 
 function onOpen() {
@@ -10,11 +10,11 @@ function showMenu() {
   var menu = [
     {name: "Set Cosme Data", functionName: "setData"}
   ];
-  bk.addMenu("Custom Menu", menu);
+  BK.addMenu("Custom Menu", menu);
 }
 
 function setData() {
-  var dataRange = accountSheet.getRange(3, 2, accountSheet.getLastRow(), 5);
+  var dataRange = ACCOUNT_SHEET.getRange(3, 2, ACCOUNT_SHEET.getLastRow(), 5);
   var cosmeData = dataRange.getValues();
   var data = [];
   for (var i = 0; i < cosmeData.length; i++) {

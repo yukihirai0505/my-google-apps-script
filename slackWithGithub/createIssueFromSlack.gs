@@ -1,10 +1,10 @@
 // SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
-var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
-var OWNER = "yukihirai0505";
-var REPO = "my-google-apps-script";
-// GitHub access token from https://github.com/settings/tokens
-var GITHUB_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('GITHUB_ACCESS_TOKEN');
-var CREATE_ISSUE_URL = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues?access_token=" + GITHUB_ACCESS_TOKEN;
+var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN'),
+  OWNER = "yukihirai0505",
+  REPO = "my-google-apps-script",
+  // GitHub access token from https://github.com/settings/tokens
+  GITHUB_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('GITHUB_ACCESS_TOKEN'),
+  CREATE_ISSUE_URL = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues?access_token=" + GITHUB_ACCESS_TOKEN;
 
 /***
  * request to GitHub api to create a new Issue

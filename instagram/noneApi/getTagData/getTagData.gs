@@ -1,5 +1,5 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-var hashTagSheet = bk.getSheetByName("hashtag");
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  HASHTAG_SHEET = BK.getSheetByName("hashtag");
 
 function onOpen() {
   showMenu();
@@ -14,7 +14,7 @@ function showMenu() {
 }
 
 function setTagData() {
-  var range = hashTagSheet.getRange(2, 1, hashTagSheet.getLastRow(), 3);
+  var range = HASHTAG_SHEET.getRange(2, 1, HASHTAG_SHEET.getLastRow(), 3);
   var data = range.getValues().map(function (e) {
     return getTagData(e);
   });

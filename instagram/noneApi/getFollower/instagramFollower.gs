@@ -1,7 +1,5 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-// SHEET name
-var igFollowerSheet = bk.getSheetByName("Instagram Follwer Count");
-var ngMessage = "cannot get";
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  IG_SHEET = BK.getSheetByName("Instagram Follwer Count");
 
 /***
  * when open google spread SHEET
@@ -17,7 +15,7 @@ function showMenu() {
   var menu = [
     {name: "Get Instagram Follower Count", functionName: "setIgFollowerData"}
   ];
-  bk.addMenu("Custom Management", menu);
+  BK.addMenu("Custom Management", menu);
 }
 
 function setIgFollowerData() {
@@ -28,7 +26,7 @@ function setIgFollowerData() {
       var json = JSON.parse(rs[1]);
       return json.entry_data.ProfilePage[0].user;
     }
-
+    
     try {
       var info = getInstagramUserInfo();
       var followerCount = info.followed_by.count;
@@ -39,13 +37,13 @@ function setIgFollowerData() {
         Utilities.sleep(1000);
         return getData(accountName, accountUrl, false)
       } else {
-        return [accountName, ngMessage, ""];
+        return [accountName, e.message, ""];
       }
     }
   }
-
+  
   var startRow = 2;
-  var range = igFollowerSheet.getRange(startRow, 1, igFollowerSheet.getLastRow(), 3);
+  var range = IG_SHEET.getRange(startRow, 1, IG_SHEET.getLastRow(), 3);
   var data = range.getValues().map(function (e) {
     var accountName = e[0];
     var accountUrl = "https://www.instagram.com/" + accountName + "/";

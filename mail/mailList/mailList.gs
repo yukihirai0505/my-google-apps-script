@@ -1,5 +1,5 @@
-var BK = SpreadsheetApp.getActiveSpreadsheet();
-var MAIL_LIST = BK.getSheetByName("MailList");
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  MAIL_LIST = BK.getSheetByName("MailList");
 
 /***
  * Hook google spread SHEET open action

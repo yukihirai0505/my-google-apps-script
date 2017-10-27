@@ -1,24 +1,22 @@
-var BK = SpreadsheetApp.getActiveSpreadsheet();
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
 
 // ハッシュタグシート
-var HASH_TAG_SHEET = BK.getSheetByName("該当ハッシュタグ群");
-var HASH_TAG_START_ROW = 3;
-var HASH_TAG_COLUMN = 2;
-
-// 投稿シート
-var POST_SHEET = BK.getSheetByName("該当投稿群");
-var POST_START_ROW = 3;
-var POST_COLUMN = 2;
-var POST_ID_COLUMN = 3;
-
-// 掲載一覧シート
-var TOP_SHEET = BK.getSheetByName("掲載一覧");
-var TOP_START_ROW = 2;
-var TOP_COLUMN = 2;
-var TOP_POST_URL_COLUMN = 3;
-var TOP_POST_ID_COLUMN = 4;
-var TOP_START_DATE_COLUMN = 5;
-var TOP_END_DATE_COLUMN = 6;
+  HASH_TAG_SHEET = BK.getSheetByName("該当ハッシュタグ群"),
+  HASH_TAG_START_ROW = 3,
+  HASH_TAG_COLUMN = 2,
+  // 投稿シート
+  POST_SHEET = BK.getSheetByName("該当投稿群"),
+  POST_START_ROW = 3,
+  POST_COLUMN = 2,
+  POST_ID_COLUMN = 3,
+  // 掲載一覧シート
+  TOP_SHEET = BK.getSheetByName("掲載一覧"),
+  TOP_START_ROW = 2,
+  TOP_COLUMN = 2,
+  TOP_POST_URL_COLUMN = 3,
+  TOP_POST_ID_COLUMN = 4,
+  TOP_START_DATE_COLUMN = 5,
+  TOP_END_DATE_COLUMN = 6;
 
 /***
  * GoogleSpreadSheetを開いた時にフックする
@@ -91,14 +89,14 @@ function setPostData() {
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
-
+    
     hashTags = hashTags.filter(onlyUnique).map(function (v) {
       return [v];
     });
     HASH_TAG_SHEET.getRange(HASH_TAG_START_ROW, HASH_TAG_COLUMN, HASH_TAG_SHEET.getLastRow(), 1).clear();
     HASH_TAG_SHEET.getRange(HASH_TAG_START_ROW, 2, hashTags.length, 1).setValues(hashTags);
   }
-
+  
   var posts = getPosts();
   var hashTags = [];
   for (var i = 0; i < posts.length; i++) {
@@ -245,22 +243,22 @@ var findTopPosts = function (topPostIds, posts) {
  * 人気投稿に含まれた投稿データのキャプチャを送信する
  */
 function sendTopPostMail(tag, tagUrl, post, mediaCount, datetime) {
-
+  
   function makeImage(tagUrl) {
     var data = Charts.newDataTable()
       .addColumn(Charts.ColumnType.STRING, 'dummy')
       .addRow(['<meta http-equiv="refresh" content="0; URL=' + tagUrl + '">'])
       .build();
-
+    
     var chart = Charts.newTableChart()
       .setDataTable(data)
       .setOption('allowHtml', true)
       .setDimensions(720, 1000)
       .build();
-
+    
     return chart.getAs('image/png').setName('capture.png');
   }
-
+  
   var recipient = "hoge";
   var subject = '「' + tag + '」の人気投稿に掲載されました';
   var body = "hoge";

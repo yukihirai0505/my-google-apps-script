@@ -1,24 +1,23 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-// SHEET name
-var igFollowerSheet = bk.getSheetByName("Instagram Follwer Daily Count");
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  IG_SHEET = BK.getSheetByName("Instagram Follwer Daily Count");
 
 function onOpen() {
   function showMenu() {
     var menu = [
       {name: "Get Instagram Follower Daily Count", functionName: "setIgFollowerData"}
     ];
-    bk.addMenu("Custom Management", menu);
+    BK.addMenu("Custom Management", menu);
   }
-
+  
   showMenu();
 }
 
 function setIgFollowerData() {
   function getRange(columnNumber) {
     var startRow = 2;
-    return igFollowerSheet.getRange(startRow, columnNumber, igFollowerSheet.getLastRow(), 1);
+    return IG_SHEET.getRange(startRow, columnNumber, IG_SHEET.getLastRow(), 1);
   }
-
+  
   function getFollowerNumber(accountUrl) {
     // Set 1 seconds interval
     Utilities.sleep(1000);
@@ -27,18 +26,18 @@ function setIgFollowerData() {
     var json = JSON.parse(rs[1]);
     return json.entry_data.ProfilePage[0].user.followed_by.count;
   }
-
+  
   function getTodayColumn() {
     function dateFormat(date) {
       var formatType = 'yyyy/MM/dd';
       return Utilities.formatDate(date, 'JST', formatType);
     }
-
+    
     var today = dateFormat(new Date());
     var row = 1;
     var startColumn = 2;
-    var lastColumn = igFollowerSheet.getLastColumn();
-    var values = igFollowerSheet.getRange(row, startColumn, row, lastColumn);
+    var lastColumn = IG_SHEET.getLastColumn();
+    var values = IG_SHEET.getRange(row, startColumn, row, lastColumn);
     var dateIndex = "";
     values.getValues()[0].filter(function (e, i) {
       if (e && dateFormat(e) === today) {
@@ -46,12 +45,12 @@ function setIgFollowerData() {
       }
     });
     if (dateIndex !== "") {
-      return igFollowerSheet.getRange(row, startColumn + dateIndex);
+      return IG_SHEET.getRange(row, startColumn + dateIndex);
     } else {
-      return igFollowerSheet.getRange(row, lastColumn + 1).setValue(today)
+      return IG_SHEET.getRange(row, lastColumn + 1).setValue(today)
     }
   }
-
+  
   var dateColumn = getTodayColumn(),
     accounts = getRange(1).getValues(),
     data = [];

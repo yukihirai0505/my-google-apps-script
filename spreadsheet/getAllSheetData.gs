@@ -1,6 +1,6 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-var sheets = bk.getSheets();
-var allSheet = sheets.shift();
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  SHEETS = BK.getSheets(),
+  ALL_SHEET = SHEETS.shift();
 
 /***
  * Hook google spread SHEET edit
@@ -13,14 +13,14 @@ function onEdit() {
  * Set all SHEET first column data to first SHEET
  */
 function setValues() {
-  allSheet.insertColumnsAfter(1, 1);
-  allSheet.deleteColumn(1);
+  ALL_SHEET.insertColumnsAfter(1, 1);
+  ALL_SHEET.deleteColumn(1);
   var total = 1;
-  for (var i = 0, len = sheets.length; i < len; i++) {
-    var values = getValues(sheets[i]);
+  for (var i = 0, len = SHEETS.length; i < len; i++) {
+    var values = getValues(SHEETS[i]);
     values.push([""]);
     var totalRow = values.length;
-    allSheet.getRange(total, 1, totalRow, 1).setValues(values);
+    ALL_SHEET.getRange(total, 1, totalRow, 1).setValues(values);
     total += totalRow;
   }
 }

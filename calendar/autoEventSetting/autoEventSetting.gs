@@ -1,14 +1,13 @@
 // SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
-var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
-
-var HOLIDAY_CALENDAR = CalendarApp.getCalendarById("ja.japanese#holiday@group.v.calendar.google.com");
-var SHUICHI_TEXT = "平井シューイチ";
-var GUEST_MAIL_ADDRESS = "hoge@gmail.com";
+var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN'),
+  HOLIDAY_CALENDAR = CalendarApp.getCalendarById("ja.japanese#holiday@group.v.calendar.google.com"),
+  SHUICHI_TEXT = "平井シューイチ",
+  GUEST_MAIL_ADDRESS = "hoge@gmail.com";
 
 function shuichi() {
   // Execute at 9 o'clock on Monday
-  var calendar = CalendarApp.getDefaultCalendar();
-  var tuesday = new Date(),
+  var calendar = CalendarApp.getDefaultCalendar(),
+    tuesday = new Date(),
     friday = new Date();
   tuesday.addDays(1);
   tuesday.setHours(18, 0, 0);

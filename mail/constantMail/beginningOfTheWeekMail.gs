@@ -1,5 +1,5 @@
-var BK = SpreadsheetApp.getActiveSpreadsheet();
-var SHEET = BK.getSheetByName("sheet name");
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  SHEET = BK.getSheetByName("SHEET name");
 
 function onOpen() {
   SpreadsheetApp.getUi()

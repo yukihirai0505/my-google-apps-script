@@ -1,5 +1,5 @@
-var BK = SpreadsheetApp.getActiveSpreadsheet();
-var REVIEW_SHEET = BK.getSheetByName("review");
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  REVIEW_SHEET = BK.getSheetByName("review");
 
 function onOpen() {
   showMenu();

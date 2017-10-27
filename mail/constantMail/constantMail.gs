@@ -1,6 +1,6 @@
-var BK = SpreadsheetApp.getActiveSpreadsheet();
-var SHEETS = BK.getSheets();
-var TODAY = new Date();
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  SHEETS = BK.getSheets(),
+  TODAY = new Date();
 
 /***
  * Hook google spread SHEET open action

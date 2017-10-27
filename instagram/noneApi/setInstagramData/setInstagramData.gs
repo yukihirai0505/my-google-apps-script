@@ -1,7 +1,7 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-var sheets = bk.getSheets();
-var sheet = sheets[0];
-var today = new Date();
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  SHEETS = BK.getSheets(),
+  SHEET = SHEETS[0],
+  TODAY = new Date();
 
 /***
  * Hook open spreadsheet
@@ -17,14 +17,14 @@ function showMenu() {
   var menu = [
     {name: "Set Instagram Data", functionName: "setInstagramData"}
   ];
-  bk.addMenu("Custom Menu", menu);
+  BK.addMenu("Custom Menu", menu);
 }
 
 /***
  * Set Instagram data
  */
 function setInstagramData() {
-  var postRange = sheet.getRange(3, 2, sheet.getLastRow(), 12);
+  var postRange = SHEET.getRange(3, 2, SHEET.getLastRow(), 12);
   var data = postRange.getValues().map(function (e) {
     return getPostData(e);
   });
@@ -45,7 +45,7 @@ function getPostData(post) {
     return post;
   }
   if (orgPostDate) {
-    var diff = (today.getTime() - orgPostDate.getTime()) / (1000 * 60 * 60 * 24);
+    var diff = (TODAY.getTime() - orgPostDate.getTime()) / (1000 * 60 * 60 * 24);
     if (diff > 7) {
       return post;
     }

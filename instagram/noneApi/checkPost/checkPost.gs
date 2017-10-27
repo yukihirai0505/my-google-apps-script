@@ -1,16 +1,14 @@
-var bk = SpreadsheetApp.getActiveSpreadsheet();
-// SHEET name
-var postCheckSheet = bk.getSheetByName("check post");
-var campaignDataSheet = bk.getSheetByName("campaign data");
-
-var campaignDataRange = campaignDataSheet.getRange(3, 1, campaignDataSheet.getLastRow(), 4);
-var campaignData = campaignDataRange.getValues();
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  POST_CHECK_SHEET = BK.getSheetByName("check post"),
+  CAMPAIGN_SHEET = BK.getSheetByName("campaign data"),
+  CAMPAIGN_RANGE = CAMPAIGN_SHEET.getRange(3, 1, CAMPAIGN_SHEET.getLastRow(), 4),
+  CAMPAIGN_DATA = CAMPAIGN_RANGE.getValues();
 
 /***
  * Set Instagram data
  */
 function checkPostData() {
-  var postCheckRange = postCheckSheet.getRange(3, 1, postCheckSheet.getLastRow(), 4);
+  var postCheckRange = POST_CHECK_SHEET.getRange(3, 1, POST_CHECK_SHEET.getLastRow(), 4);
   var targetsData = postCheckRange.getValues();
   var data = [];
   for (var i = 0; i < targetsData.length; i++) {
@@ -39,7 +37,7 @@ function checkData(target) {
       mediaNodes = userData.media.nodes;
     for (var i = 0; i < mediaNodes.length; i++) {
       var node = mediaNodes[i];
-      var campaign = campaignData.filter(function (element, index, array) {
+      var campaign = CAMPAIGN_DATA.filter(function (element, index, array) {
         if (element[0] === campaignId) {
           return element;
         }

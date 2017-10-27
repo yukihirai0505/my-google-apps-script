@@ -1,8 +1,8 @@
-var BK = SpreadsheetApp.getActiveSpreadsheet();
-var REPLY_LIST = BK.getSheetByName("Reply Message List");
-var TARGET_MAIL_ADDRESS = "yukihirai0505@gmail.com";
+var BK = SpreadsheetApp.getActiveSpreadsheet(),
+  REPLY_LIST = BK.getSheetByName("Reply Message List"),
+  TARGET_MAIL_ADDRESS = "yukihirai0505@gmail.com",
 // SlackApp Library Key => M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
-var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
+  SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
 
 /***
  * Send reply message automatically
