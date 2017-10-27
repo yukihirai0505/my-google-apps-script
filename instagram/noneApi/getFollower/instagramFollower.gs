@@ -20,8 +20,12 @@ function showMenu() {
 
 function setIgFollowerData() {
   function getData(accountName, accountUrl, retryFlg) {
+    function getRandomInt(min, max) {
+      return Math.floor( Math.random() * (max - min + 1) ) + min;
+    }
     function getInstagramUserInfo() {
       var response = UrlFetchApp.fetch(encodeURI(accountUrl), { muteHttpExceptions: true });
+      Utilities.sleep(getRandomInt(1000, 3000));
       var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
       var json = JSON.parse(rs[1]);
       return json.entry_data.ProfilePage[0].user;
@@ -34,7 +38,6 @@ function setIgFollowerData() {
       return [accountName, followerCount, privateMessage];
     } catch (e) {
       if (retryFlg === true) {
-        Utilities.sleep(1000);
         return getData(accountName, accountUrl, false)
       } else {
         return [accountName, e.message, ""];
