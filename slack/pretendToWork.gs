@@ -14,11 +14,11 @@ function doPost(e) {
   if (SLACK_VERIFY_TOKEN !== param.token) {
     throw new Error("invalid token.");
   }
-  var text = param.text;
-  var username = "@" + param.user_name;
-  var slackApp = SlackApp.create(SLACK_ACCESS_TOKEN);
-  var channelId = e.parameter.channel_id;
-  var message = "";
+  var text = param.text,
+    username = "@" + param.user_name,
+    slackApp = SlackApp.create(SLACK_ACCESS_TOKEN),
+    channelId = e.parameter.channel_id,
+    message = "";
   if (text.match(/良さそう|よさそう|よさげ/)) {
     message = username + "\n:muscle:";
   }
