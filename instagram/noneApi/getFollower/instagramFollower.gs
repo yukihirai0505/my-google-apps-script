@@ -21,10 +21,11 @@ function showMenu() {
 function setIgFollowerData() {
   function getData(accountName, accountUrl, retryFlg) {
     function getRandomInt(min, max) {
-      return Math.floor( Math.random() * (max - min + 1) ) + min;
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+    
     function getInstagramUserInfo() {
-      var response = UrlFetchApp.fetch(encodeURI(accountUrl), { muteHttpExceptions: true });
+      var response = UrlFetchApp.fetch(encodeURI(accountUrl), {muteHttpExceptions: true});
       Utilities.sleep(getRandomInt(1000, 3000));
       var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
       var json = JSON.parse(rs[1]);
@@ -32,9 +33,9 @@ function setIgFollowerData() {
     }
     
     try {
-      var info = getInstagramUserInfo();
-      var followerCount = info.followed_by.count;
-      var privateMessage = info.is_private ? "close" : "open";
+      var info = getInstagramUserInfo(),
+        followerCount = info.followed_by.count,
+        privateMessage = info.is_private ? "close" : "open";
       return [accountName, followerCount, privateMessage];
     } catch (e) {
       if (retryFlg === true) {
@@ -45,12 +46,12 @@ function setIgFollowerData() {
     }
   }
   
-  var startRow = 2;
-  var range = IG_SHEET.getRange(startRow, 1, IG_SHEET.getLastRow(), 3);
-  var data = range.getValues().map(function (e) {
-    var accountName = e[0];
-    var accountUrl = "https://www.instagram.com/" + accountName + "/";
-    return (accountName && !e[2]) ? getData(accountName, accountUrl, true) : e;
-  });
+  var startRow = 2,
+    range = IG_SHEET.getRange(startRow, 1, IG_SHEET.getLastRow(), 3),
+    data = range.getValues().map(function (e) {
+      var accountName = e[0];
+      var accountUrl = "https://www.instagram.com/" + accountName + "/";
+      return (accountName && !e[2]) ? getData(accountName, accountUrl, true) : e;
+    });
   range.setValues(data);
 }

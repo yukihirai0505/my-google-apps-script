@@ -8,12 +8,10 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
  * Set Instagram data
  */
 function checkPostData() {
-  var postCheckRange = POST_CHECK_SHEET.getRange(3, 1, POST_CHECK_SHEET.getLastRow(), 4);
-  var targetsData = postCheckRange.getValues();
-  var data = [];
-  for (var i = 0; i < targetsData.length; i++) {
-    data[i] = checkData(targetsData[i]);
-  }
+  var postCheckRange = POST_CHECK_SHEET.getRange(3, 1, POST_CHECK_SHEET.getLastRow(), 4),
+    data = postCheckRange.getValues().map(function (e) {
+      return checkData(e);
+    });
   postCheckRange.setValues(data);
 }
 
@@ -24,9 +22,9 @@ function checkPostData() {
  */
 function checkData(target) {
   try {
-    var accountName = target[0];
-    var campaignId = target[1];
-    var pTime = target[2];
+    var accountName = target[0],
+      campaignId = target[1],
+      pTime = target[2];
     if (!accountName || pTime) {
       return target;
     }

@@ -21,9 +21,9 @@ function setIgFollowerData() {
   function getFollowerNumber(accountUrl) {
     // Set 1 seconds interval
     Utilities.sleep(1000);
-    var response = UrlFetchApp.fetch(encodeURI(accountUrl), { muteHttpExceptions: true });
-    var rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
-    var json = JSON.parse(rs[1]);
+    var response = UrlFetchApp.fetch(encodeURI(accountUrl), {muteHttpExceptions: true}),
+      rs = response.getContentText().match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i),
+      json = JSON.parse(rs[1]);
     return json.entry_data.ProfilePage[0].user.followed_by.count;
   }
   
@@ -33,12 +33,12 @@ function setIgFollowerData() {
       return Utilities.formatDate(date, 'JST', formatType);
     }
     
-    var today = dateFormat(new Date());
-    var row = 1;
-    var startColumn = 2;
-    var lastColumn = IG_SHEET.getLastColumn();
-    var values = IG_SHEET.getRange(row, startColumn, row, lastColumn);
-    var dateIndex = "";
+    var today = dateFormat(new Date()),
+      row = 1,
+      startColumn = 2,
+      lastColumn = IG_SHEET.getLastColumn(),
+      values = IG_SHEET.getRange(row, startColumn, row, lastColumn),
+      dateIndex = "";
     values.getValues()[0].filter(function (e, i) {
       if (e && dateFormat(e) === today) {
         dateIndex = i
@@ -55,9 +55,9 @@ function setIgFollowerData() {
     accounts = getRange(1).getValues(),
     data = [];
   for (var i = 0; i < accounts.length; i++) {
-    var account = accounts[i];
-    var accountName = account[0];
-    var accountUrl = "https://www.instagram.com/" + accountName + "/";
+    var account = accounts[i],
+      accountName = account[0],
+      accountUrl = "https://www.instagram.com/" + accountName + "/";
     if (!accountName) {
       data[i] = account;
       continue;

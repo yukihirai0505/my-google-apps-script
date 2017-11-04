@@ -6,18 +6,18 @@ function onOpen() {
 }
 
 function showMenu() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var menu = [
-    {name: "Get Tag Info", functionName: "setTagData"}
-  ];
+  var ss = SpreadsheetApp.getActiveSpreadsheet(),
+    menu = [
+      {name: "Get Tag Info", functionName: "setTagData"}
+    ];
   ss.addMenu("Custom menu", menu);
 }
 
 function setTagData() {
-  var range = HASHTAG_SHEET.getRange(2, 1, HASHTAG_SHEET.getLastRow(), 3);
-  var data = range.getValues().map(function (e) {
-    return getTagData(e);
-  });
+  var range = HASHTAG_SHEET.getRange(2, 1, HASHTAG_SHEET.getLastRow(), 3),
+    data = range.getValues().map(function (e) {
+      return getTagData(e);
+    });
   range.setValues(data);
 }
 
@@ -33,8 +33,8 @@ function getTagData(hashTag) {
 }
 
 function setTagCount(url) {
-  var tagJson = getJson(UrlFetchApp.fetch(url, { muteHttpExceptions: true }));
-  var tagData = tagJson.entry_data.TagPage[0].tag;
+  var tagJson = getJson(UrlFetchApp.fetch(url, {muteHttpExceptions: true})),
+    tagData = tagJson.entry_data.TagPage[0].tag;
   return tagCount = tagData.media.count;
 }
 

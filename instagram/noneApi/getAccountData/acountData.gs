@@ -6,16 +6,16 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
  * Set Instagram data
  */
 function setInstagramAccountData() {
-  var accountRange = ACCOUNT_SHEET.getRange(3, 2, ACCOUNT_SHEET.getLastRow(), 9);
-  var data = accountRange.getValues().map(function (e) {
-    return getAccountData(accounts);
-  });
+  var accountRange = ACCOUNT_SHEET.getRange(3, 2, ACCOUNT_SHEET.getLastRow(), 9),
+    data = accountRange.getValues().map(function (e) {
+      return getAccountData(accounts);
+    });
   accountRange.setValues(data);
 }
 
 /***
  * Get Instagram data
- * @param post
+ * @param account
  * @returns {*}
  */
 function getAccountData(account) {
