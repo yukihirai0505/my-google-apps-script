@@ -40,7 +40,7 @@ function setIgFollowerData() {
         totalLikes = monthlyMediaNodes.reduce(function (sum, value) {
           return sum + value.likes.count;
         }, 0),
-        privateMessage = info.is_private ? "非公開" : "公開",
+        privateMessage = info.is_private ? "private" : "open",
         eng = totalLikes / (followerCount * monthlyMediaNodes.length);
       return [accountName, followerCount, privateMessage, monthlyMediaNodes.length, totalLikes, eng];
     } catch (e) {
