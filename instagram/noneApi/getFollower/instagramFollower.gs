@@ -21,7 +21,10 @@ function showMenu() {
 }
 
 function setIgFollowerData() {
-  function getData(accountName, accountUrl, retryFlg) {
+  function getData(e, retryFlg) {
+    var accountName = e[0],
+      accountUrl = "https://www.instagram.com/" + accountName + "/";
+    
     function getInstagramUserInfo() {
       var response = UrlFetchApp.fetch(encodeURI(accountUrl), {muteHttpExceptions: true});
       var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
@@ -40,25 +43,28 @@ function setIgFollowerData() {
         totalLikes = monthlyMediaNodes.reduce(function (sum, value) {
           return sum + value.likes.count;
         }, 0),
+        totalComments = monthlyMediaNodes.reduce(function (sum, value) {
+          return sum + value.comments.count;
+        }, 0),
         privateMessage = info.is_private ? "private" : "open",
+        engWithComments = (totalLikes + totalComments) / (followerCount * monthlyMediaNodes.length),
         eng = totalLikes / (followerCount * monthlyMediaNodes.length);
-      return [accountName, followerCount, privateMessage, monthlyMediaNodes.length, totalLikes, eng];
+      return [accountName, followerCount, privateMessage, monthlyMediaNodes.length, totalLikes, totalComments, engWithComments, eng];
     } catch (e) {
       if (retryFlg === true) {
         Utilities.sleep(1000);
-        return getData(accountName, accountUrl, false)
+        return getData(e, false)
       } else {
-        return [accountName, e.message, "", "", "", ""];
+        e[1] = e.message;
+        return e;
       }
     }
   }
   
   var startRow = 2;
-  var range = IG_SHEET.getRange(startRow, 1, IG_SHEET.getLastRow(), 6);
+  var range = IG_SHEET.getRange(startRow, 1, IG_SHEET.getLastRow(), 8);
   var data = range.getValues().map(function (e) {
-    var accountName = e[0];
-    var accountUrl = "https://www.instagram.com/" + accountName + "/";
-    return (accountName && !e[2]) ? getData(accountName, accountUrl, true) : e;
+    return (e[0] && !e[2]) ? getData(e, true) : e;
   });
   range.setValues(data);
 }
