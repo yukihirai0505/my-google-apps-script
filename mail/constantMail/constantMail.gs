@@ -18,25 +18,25 @@ function onOpen() {
  */
 function alertEmail() {
   for (var i = 0, sheetLen = SHEETS.length; i < sheetLen; i++) {
-    var mail = SHEETS[i].getRange(1, 2, 9, 1).getValues();
-    var alertBusinessDays = String(mail[6][0]).split(',');
-    var deadlineBusinessDays = String(mail[7][0]).split(',');
+    var mail = SHEETS[i].getRange(1, 2, 9, 1).getValues(),
+      alertBusinessDays = String(mail[6][0]).split(','),
+      deadlineBusinessDays = String(mail[7][0]).split(',');
     for (var j = 0, daysLen = alertBusinessDays.length; j < daysLen; j++) {
-      var alertDate = getBusinessDate(1, Number(alertBusinessDays[j]));
-      var deadline = getBusinessDate(1, Number(deadlineBusinessDays[j]));
+      var alertDate = getBusinessDate(1, Number(alertBusinessDays[j])),
+        deadline = getBusinessDate(1, Number(deadlineBusinessDays[j]));
       if (alertDate === TODAY.getDate()) {
-        var to = mail[0][0];
-        var cc = mail[1][0];
-        var bcc = mail[2][0];
-        var subject = mail[3][0];
-        var body = mail[4][0];
-        var htmlBody = mail[5][0];
-        var options = {
-          cc: cc,
-          bcc: bcc,
-          htmlBody: replacePlaceholder(htmlBody, deadline),
-          name: 'hogehoge',
-        };
+        var to = mail[0][0],
+          cc = mail[1][0],
+          bcc = mail[2][0],
+          subject = mail[3][0],
+          body = mail[4][0],
+          htmlBody = mail[5][0],
+          options = {
+            cc: cc,
+            bcc: bcc,
+            htmlBody: replacePlaceholder(htmlBody, deadline),
+            name: 'hogehoge',
+          };
         MailApp.sendEmail(to, replacePlaceholder(subject, deadline), replacePlaceholder(body, deadline), options);
       }
     }
@@ -48,14 +48,14 @@ function alertEmail() {
  */
 function remindEmail() {
   for (var i = 0, sheetLen = SHEETS.length; i < sheetLen; i++) {
-    var mail = SHEETS[i].getRange(9, 2, 4, 1).getValues();
-    var remindBusinessDays = mail[0][0];
-    var remindMailTo = mail[1][0];
+    var mail = SHEETS[i].getRange(9, 2, 4, 1).getValues(),
+      remindBusinessDays = mail[0][0],
+      remindMailTo = mail[1][0];
     if (remindBusinessDays && remindMailTo) {
       var remindDate = getBusinessDate(1, remindBusinessDays);
       if (remindDate === TODAY.getDate()) {
-        var subject = mail[2][0];
-        var body = mail[3][0];
+        var subject = mail[2][0],
+          body = mail[3][0];
         MailApp.sendEmail(remindMailTo, subject, body);
       }
     }
