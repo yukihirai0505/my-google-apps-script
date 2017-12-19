@@ -17,7 +17,7 @@ function onOpen() {
 function setTagCount(url) {
   var tagJson = getJson(url);
   var tagData = tagJson.entry_data.TagPage[0].tag;
-  return tagCount = tagData.media.count;
+  return tagData.media.count;
 }
 
 function setPostData() {
