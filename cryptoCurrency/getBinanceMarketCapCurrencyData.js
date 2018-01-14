@@ -24,20 +24,21 @@ function setData() {
         return e;
       }
     }),
-    marketCap = fetchJson('https://api.coinmarketcap.com/v1/ticker/?convert=jpy&limit=0'),
+    marketCap = fetchJson('https://api.coinmarketcap.com/v1/ticker/?limit=0'),
     data = binancePrices.map(function (e) {
       var symbol = e.symbol.slice(0, -3),
         price = e.price * btcJpyPrice,
-        rank = marketCap.filter(function (cap) {
+        cap = marketCap.filter(function (cap) {
           if (symbol === cap.symbol) {
             return cap;
           }
         });
-      if (rank.length > 0) {
-        return [symbol, price, rank[0].rank];
+      if (cap.length > 0) {
+        var capData = cap[0];
+        return [symbol, price, capData.total_supply, capData.max_supply, capData.rank];
       } else {
-        return [symbol, price, ""];
+        return [symbol, price, "", "", ""];
       }
     });
-  SHEET.getRange(1, 1, data.length, 3).setValues(data);
+  SHEET.getRange(2, 1, data.length, 5).setValues(data);
 }
