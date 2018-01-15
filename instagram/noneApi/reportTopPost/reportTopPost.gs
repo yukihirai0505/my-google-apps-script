@@ -172,11 +172,11 @@ function checkTopPost() {
  */
 function getTopPostData(tagUrl) {
   var json = getJson(tagUrl);
-  var tagData = json.entry_data.TagPage[0].tag;
+  var tagData = json.entry_data.TagPage[0].graphql.hashtag;
   return {
-    "mediaCount": tagData.media.count,
-    "topPostIds": tagData.top_posts.nodes.map(function (e) {
-      return e.id;
+    "mediaCount": tagData.edge_hashtag_to_media.count,
+    "topPostIds": tagData.edge_hashtag_to_top_posts.edges.map(function (e) {
+      return e.node.id;
     })
   };
 }
