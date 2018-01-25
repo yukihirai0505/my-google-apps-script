@@ -76,19 +76,9 @@ function setCategoryData() {
 }
 
 function getReviewData(baseLink) {
-  function getBrandName(response) {
-    var regex = /<span class="brd-name".*><a href.*>(.*)<\/a><\/span>/
-    return regex.exec(response)[1];
-  }
-
-  function getItemName(response) {
-    var regex = /<p class="pdct-name"><a href=".*">(.*)<\/a><\/p>/
-    return regex.exec(response)[1];
-  }
-
-  function getRatingValue(response) {
-    var regex = /<p.*itemprop="ratingValue">(.*)<\/p>/;
-    return regex.exec(response)[1];
+  function getProductData(response) {
+    var regex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
+    return JSON.parse(regex.exec(response)[1]);
   }
 
   function getPoint(response) {
@@ -98,7 +88,7 @@ function getReviewData(baseLink) {
 
   function getReviewCounts() {
     function getReviewCount(response) {
-      var regex = /<span class="count cnt" itemprop="reviewCount">(.*)<\/span>/;
+      var regex = /<span class="count cnt">(.*)<\/span>/;
       return regex.exec(response)[1];
     }
 
@@ -113,6 +103,7 @@ function getReviewData(baseLink) {
     var reviewCounts = [];
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
+      Logger.log(link);
       try {
         var response = UrlFetchApp.fetch(link).getContentText('Shift_JIS');
         reviewCounts[i] = getReviewCount(response);
@@ -126,15 +117,14 @@ function getReviewData(baseLink) {
   var result,
     reviewCounts = getReviewCounts();
   try {
-    var response = UrlFetchApp.fetch(baseLink).getContentText('Shift_JIS');
-    var brandName = getBrandName(response);
-    var itemName = getItemName(response);
-    var ratingValue = getRatingValue(response);
-    var point = getPoint(response);
-    result = [brandName, itemName, ratingValue, point];
+    var response = UrlFetchApp.fetch(baseLink).getContentText('Shift_JIS'),
+      productData = getProductData(response),
+      point = getPoint(response);
+    Logger.log(productData);
+    result = [productData.brand.name, productData.name, productData.aggregateRating.ratingValue, point];
   } catch (err) {
     result = Array.apply(null, new Array(4)).map(function () {
-      return "error";
+      return err.message;
     });
   }
   return result.concat(reviewCounts);
