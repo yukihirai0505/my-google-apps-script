@@ -22,8 +22,7 @@ function setData() {
     return fetchJson('https://api.binance.com/api/v3/ticker/price?symbol=' + symbol + BTC_SYMBOL).price;
   }
 
-  var btcJpyPrice = //fetchJson('https://api.bitflyer.jp/v1/ticker').ltp,
-      fetchJson('https://api.zaif.jp/api/1/last_price/btc_jpy').last_price,
+  var btcJpyPrice = fetchJson('https://api.zaif.jp/api/1/last_price/btc_jpy').last_price,
     range = SHEET.getRange(2, 1, SHEET.getLastRow(), 7),
     data = range.getValues().map(function (e) {
       var symbol = e[0],
