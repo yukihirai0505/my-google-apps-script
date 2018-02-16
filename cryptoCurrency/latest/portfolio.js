@@ -19,23 +19,38 @@ function fetchJson(url) {
 }
 
 function setData() {
+  var marketCap = fetchJson('https://api.coinmarketcap.com/v1/ticker/?' + QUERY_STRING + '&limit=0');
+
+  function getMarketcap(symbol) {
+    symbol = symbol === 'YOYO' ? 'YOYOW' : symbol;
+    symbol = symbol === 'IOTA' ? 'MIOTA' : symbol;
+    var cap = marketCap.filter(function (e) {
+      if (e.symbol === symbol) {
+        return e;
+      }
+    })[0];
+    return cap ? cap.rank : 'no rank';
+  }
+
   var btcJpyPrice = fetchJson('https://api.zaif.jp/api/1/last_price/btc_jpy').last_price,
     kuCoinPrices = fetchJson('https://api.kucoin.com/v1/open/tick').data,
     cryptopiaPrices = fetchJson('https://www.cryptopia.co.nz/api/GetMarkets').Data,
     binancePrices = fetchJson('https://api.binance.com/api/v1/ticker/allPrices'),
     coinexchangeMarkets = fetchJson('https://www.coinexchange.io/api/v1/getmarkets').result,
     coinexcgabgeMarketSummaries = fetchJson('https://www.coinexchange.io/api/v1/getmarketsummaries').result,
-    range = SHEET.getRange(2, 1, SHEET.getLastRow(), 8),
-    data = range.getValues().map(function (e) {
+    hitbtcPrices = fetchJson('https://api.hitbtc.com/api/2/public/ticker'),
+    range = SHEET.getRange(2, 1, SHEET.getLastRow(), 11),
+    data = range.getValues().map(function (e, i) {
       var symbol = e[0],
         place = e[1],
         quality = e[2],
-        getBtcPrice = e[3];
+        lineNum = i + 2;
       Logger.log(symbol);
       if (symbol) {
         var price;
         // BTCの場合のみ特殊
         if (symbol === BTC_SYMBOL) {
+          e[5] = btcJpyPrice;
           e[6] = quality ? btcJpyPrice * quality : quality;
           return e;
         }
@@ -74,50 +89,41 @@ function setData() {
             })[0];
             price = price ? price.LastPrice : 'no price';
           }
+        } else if (place === 'hitbtc') {
+          price = hitbtcPrices.filter(function (hitbtc) {
+            if (hitbtc.symbol === symbol + BTC_SYMBOL) {
+              return e;
+            }
+          })[0];
+          price = price ? price.last : 'no price';
         }
 
         if (price) {
           var jpy = price * btcJpyPrice;
           Logger.log(jpy);
           e[4] = price;
-          e[5] = (price / getBtcPrice) - 1;
-          e[6] = jpy;
-          e[7] = jpy * quality;
+          e[5] = jpy;
+          e[6] = '=C' + lineNum + '*F' + lineNum;
+          e[7] = '=C' + lineNum + '*E' + lineNum;
+          e[8] = '=E' + lineNum + '/D' + lineNum + '-1';
+          e[9] = '=G' + lineNum + '/L2';
+          e[10] = getMarketcap(symbol);
         }
       }
       return e;
     });
   range.setValues(data);
   setResultColor();
-  getMarketCap();
-}
-
-function getMarketCap() {
-  var range = SHEET.getRange(2, 1, SHEET.getLastRow(), 9),
-    marketCap = fetchJson('https://api.coinmarketcap.com/v1/ticker/?' + QUERY_STRING + '&limit=0'),
-    data = range.getValues().map(function (e) {
-      var symbol = e[0];
-      Logger.log(symbol);
-      if (symbol) {
-        symbol = symbol === 'YOYO' ? 'YOYOW' : symbol;
-        symbol = symbol === 'IOTA' ? 'MIOTA' : symbol;
-        var cap = marketCap.filter(function (e) {
-          if (e.symbol === symbol) {
-            return e;
-          }
-        })[0];
-        e[8] = cap ? cap.rank : 'no rank';
-      }
-      return e;
-    });
-  range.setValues(data);
 }
 
 function setResultColor() {
   for (var i = 3; i <= SHEET.getLastRow(); i++) {
-    var range = SHEET.getRange(i, 6);
-    if (SHEET.getRange(i, 6).getValue() > 0) {
+    var range = SHEET.getRange(i, 9),
+      value = range.getValue();
+    if (value > 0) {
       range.setBackground('#DFF2BF');
+    } else if (value === 0) {
+      range.setBackground('#FFF');
     } else {
       range.setBackground('#FFBABA');
     }
