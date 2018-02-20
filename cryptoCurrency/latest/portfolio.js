@@ -32,6 +32,16 @@ function setData() {
     return cap ? cap.rank : 'no rank';
   }
 
+  function getZaifLastPrice(symbol) {
+    var _symbol;
+    _symbol = symbol === 'XEM' ? 'xem': symbol;
+    _symbol = symbol === 'CMS' ? 'erc20.cms': _symbol;
+    _symbol = symbol === 'MONA' ? 'mona': _symbol;
+    _symbol = symbol === 'ETH' ? 'eth': _symbol;
+    _symbol = symbol === 'XCP' ? 'xcp': _symbol;
+    return fetchJson('https://api.zaif.jp/api/1/last_price/' + _symbol + '_jpy').last_price;
+  }
+
   var btcJpyPrice = fetchJson('https://api.zaif.jp/api/1/last_price/btc_jpy').last_price,
     kuCoinPrices = fetchJson('https://api.kucoin.com/v1/open/tick').data,
     cryptopiaPrices = fetchJson('https://www.cryptopia.co.nz/api/GetMarkets').Data,
@@ -96,6 +106,8 @@ function setData() {
             }
           })[0];
           price = price ? price.last : 'no price';
+        } else if (place === 'zaif') {
+          price = getZaifLastPrice(symbol) / btcJpyPrice;
         }
 
         if (price) {
