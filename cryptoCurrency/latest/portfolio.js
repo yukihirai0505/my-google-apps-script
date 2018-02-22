@@ -34,11 +34,11 @@ function setData() {
 
   function getZaifLastPrice(symbol) {
     var _symbol;
-    _symbol = symbol === 'XEM' ? 'xem': symbol;
-    _symbol = symbol === 'CMS' ? 'erc20.cms': _symbol;
-    _symbol = symbol === 'MONA' ? 'mona': _symbol;
-    _symbol = symbol === 'ETH' ? 'eth': _symbol;
-    _symbol = symbol === 'XCP' ? 'xcp': _symbol;
+    _symbol = symbol === 'XEM' ? 'xem' : symbol;
+    _symbol = symbol === 'CMS' ? 'erc20.cms' : _symbol;
+    _symbol = symbol === 'MONA' ? 'mona' : _symbol;
+    _symbol = symbol === 'ETH' ? 'eth' : _symbol;
+    _symbol = symbol === 'XCP' ? 'xcp' : _symbol;
     return fetchJson('https://api.zaif.jp/api/1/last_price/' + _symbol + '_jpy').last_price;
   }
 
