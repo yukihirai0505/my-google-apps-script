@@ -36,19 +36,20 @@ function setInsightData() {
       startColumn = 3,
       lastColumn = SHEET.getLastColumn(),
       values = SHEET.getRange(row, startColumn, row, lastColumn),
-      dateIndex;
+      dateIndex = "";
     values.getValues()[0].filter(function (e, i) {
       if (e && dateFormat(e) === yesterday) {
         dateIndex = i
       }
     });
-    if (dateIndex) {
+    if (dateIndex !== "") {
       return SHEET.getRange(row, startColumn + dateIndex);
     } else {
       return SHEET.getRange(row, lastColumn + 1).setValue(yesterday)
     }
   }
 
+  Logger.log(INSTAGRAM_USER_INSIGHT_URL);
   var insightData = JSON.parse(UrlFetchApp.fetch(INSTAGRAM_USER_INSIGHT_URL, {muteHttpExceptions: true})).data[0].values[0].value,
     insightCountryCodes = Object.keys(insightData),
     startRow = 7,
