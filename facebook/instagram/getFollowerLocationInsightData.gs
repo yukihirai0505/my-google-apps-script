@@ -11,7 +11,7 @@ function onOpen() {
     var menu = [
       {name: 'Get Daily Insight Data', functionName: 'setInsightData'}
     ];
-    bk.addMenu('Custom Management', menu);
+    BK.addMenu('Custom Management', menu);
   }
 
   showMenu();
