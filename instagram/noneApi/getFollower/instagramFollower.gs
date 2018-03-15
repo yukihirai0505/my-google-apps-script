@@ -34,7 +34,7 @@ function setIgFollowerData() {
     
     try {
       var info = getInstagramUserInfo(),
-        followerCount = info.followed_by.count,
+        followerCount = info.edge_followed_by.count,
         monthlyMediaNodes = info.media.nodes.filter(function (e) {
           if (new Date(e.node.taken_at_timestamp * 1000).getTime() >= ONE_MONTH_AGO.getTime()) {
             return e;
