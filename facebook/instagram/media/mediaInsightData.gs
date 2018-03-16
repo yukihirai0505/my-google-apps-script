@@ -1,6 +1,6 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
-  SHEET = BK.getSheetByName('insight'),
-  FACEBOOK_PARAMS = SHEET.getRange(2, 2, 2, 1).getValues(),
+  MEDIA_SHEET = BK.getSheetByName('media_insight'),
+  FACEBOOK_PARAMS = MEDIA_SHEET.getRange(2, 2, 2, 1).getValues(),
   FACEBOOK_PAGE_ACCESS_TOKEN = FACEBOOK_PARAMS[0],
   INSTAGRAM_BUSINESS_ACCOUNT_ID = FACEBOOK_PARAMS[1],
   FACEBOOK_GRAPH_API = 'https://graph.facebook.com/',
@@ -27,12 +27,12 @@ function setMediaData() {
     }),
     mediaData = shiftArray(data);
 
-  SHEET.getRange(6, 2, mediaData.length, data.length).setValues(mediaData);
+  MEDIA_SHEET.getRange(6, 2, mediaData.length, data.length).setValues(mediaData);
   setMediaInsightData();
 }
 
 function setMediaInsightData() {
-  var data = SHEET.getRange(7, 2, 1, SHEET.getLastColumn()).getValues()[0].filter(function (e) {
+  var data = MEDIA_SHEET.getRange(7, 2, 1, MEDIA_SHEET.getLastColumn()).getValues()[0].filter(function (e) {
       if (e) {
         return e;
       }
@@ -59,7 +59,7 @@ function setMediaInsightData() {
     }),
     mediaInsightData = shiftArray(data);
 
-  SHEET.getRange(12, 2, mediaInsightData.length, data.length).setValues(mediaInsightData);
+  MEDIA_SHEET.getRange(12, 2, mediaInsightData.length, data.length).setValues(mediaInsightData);
 }
 
 function shiftArray(data) {
