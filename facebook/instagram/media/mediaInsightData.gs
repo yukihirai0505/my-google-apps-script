@@ -1,5 +1,6 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
   MEDIA_SHEET = BK.getSheetByName('media_insight'),
+  USER_SHEET = BK.getSheetByName('user_insight'),
   FACEBOOK_PARAMS = MEDIA_SHEET.getRange(2, 2, 2, 1).getValues(),
   FACEBOOK_PAGE_ACCESS_TOKEN = FACEBOOK_PARAMS[0],
   INSTAGRAM_BUSINESS_ACCOUNT_ID = FACEBOOK_PARAMS[1],
@@ -7,7 +8,8 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
   ACCESS_TOKEN_PARAM = '&access_token=' + FACEBOOK_PAGE_ACCESS_TOKEN,
   USER_MEDIA_PARAMS = '/media?fields=media_url,timestamp,like_count,comments_count,permalink&pretty=0',
   USER_MEDIA_URL = FACEBOOK_GRAPH_API + INSTAGRAM_BUSINESS_ACCOUNT_ID + USER_MEDIA_PARAMS + ACCESS_TOKEN_PARAM,
-  MEDIA_INSIGHT_PARAMS = '/insights?metric=impressions,engagement,reach,saved';
+  MEDIA_INSIGHT_PARAMS = '/insights?metric=impressions,engagement,reach,saved',
+  USER_INSIGHT_PARAMS = '/insights?metric=impressions,profile_views,website_clicks&period=day';
 
 function onOpen() {
   function showMenu() {
