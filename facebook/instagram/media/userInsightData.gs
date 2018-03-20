@@ -44,12 +44,11 @@ function setUserInsightData() {
     }
   });
   var startRow = 2,
-    startColumn = 2,
-    dateColumn = getYesterdayColumn().getColumn() - 1;
+    dateColumn = getYesterdayColumn().getColumn();
   var data = [
     [impressions],
     [profileViews],
     [websiteClicks]
   ];
-  USER_SHEET.getRange(startRow, startColumn, data.length, dateColumn).setValues(data);
+  USER_SHEET.getRange(startRow, dateColumn, data.length, 1).setValues(data);
 }
