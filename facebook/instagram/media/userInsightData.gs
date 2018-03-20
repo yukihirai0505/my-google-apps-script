@@ -1,4 +1,6 @@
 function setUserInsightData() {
+  var userInsightUrl = FACEBOOK_GRAPH_API + INSTAGRAM_BUSINESS_ACCOUNT_ID + USER_INSIGHT_PARAMS + ACCESS_TOKEN_PARAM;
+  var userInsightData = JSON.parse(UrlFetchApp.fetch(userInsightUrl, {muteHttpExceptions: true})).data;
 
   function getYesterdayColumn() {
     function dateFormat(date) {
@@ -26,29 +28,18 @@ function setUserInsightData() {
     }
   }
 
-  var impressions,
-    profileViews,
-    websiteClicks;
-  var userInsightUrl = FACEBOOK_GRAPH_API + INSTAGRAM_BUSINESS_ACCOUNT_ID + USER_INSIGHT_PARAMS + ACCESS_TOKEN_PARAM;
-  JSON.parse(UrlFetchApp.fetch(userInsightUrl, {muteHttpExceptions: true})).data.forEach(function (e) {
-    Logger.log(e);
-    var value = e.values[e.values.length - 1].value;
-    if (e.name === 'impressions') {
-      impressions = value;
-    }
-    if (e.name === 'profile_views') {
-      profileViews = value;
-    }
-    if (e.name === 'website_clicks') {
-      websiteClicks = value;
-    }
+  function getInsightValue(key) {
+    var target = userInsightData.filter(function (e) {
+      if (e.name === key) {
+        return e;
+      }
+    })[0];
+    return target.values[target.values.length - 1].value;
+  }
+
+  var dateColumn = getYesterdayColumn().getColumn();
+  var data = USER_INSIGHT_METRICS.map(function (e) {
+    return [getInsightValue(e)]
   });
-  var startRow = 2,
-    dateColumn = getYesterdayColumn().getColumn();
-  var data = [
-    [impressions],
-    [profileViews],
-    [websiteClicks]
-  ];
-  USER_SHEET.getRange(startRow, dateColumn, data.length, 1).setValues(data);
+  USER_SHEET.getRange(2, dateColumn, data.length, 1).setValues(data);
 }

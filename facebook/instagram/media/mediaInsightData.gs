@@ -9,7 +9,10 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
   USER_MEDIA_PARAMS = '/media?fields=media_url,timestamp,like_count,comments_count,permalink&pretty=0',
   USER_MEDIA_URL = FACEBOOK_GRAPH_API + INSTAGRAM_BUSINESS_ACCOUNT_ID + USER_MEDIA_PARAMS + ACCESS_TOKEN_PARAM,
   MEDIA_INSIGHT_PARAMS = '/insights?metric=impressions,engagement,reach,saved',
-  USER_INSIGHT_PARAMS = '/insights?metric=impressions,profile_views,website_clicks&period=day';
+  USER_INSIGHT_METRICS = [
+    'impressions', 'reach', 'follower_count', 'email_contacts', 'phone_call_clicks', 'text_message_clicks', 'get_directions_clicks', 'website_clicks', 'profile_views'
+  ],
+  USER_INSIGHT_PARAMS = '/insights?metric=' + USER_INSIGHT_METRICS.join(',') + '&period=day';
 
 function onOpen() {
   function showMenu() {
