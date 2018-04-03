@@ -21,11 +21,12 @@ function showMenu() {
 }
 
 function setAccountNames() {
-  var range = SHEET.getRange(2, 1, SHEET.getLastRow(), 2);
+  var range = SHEET.getRange(2, 1, SHEET.getLastRow(), 3);
   var data = range.getValues().map(function (e) {
     var postUrl = e[0];
     if (postUrl) {
-      e[1] = '=setAccountName("' + postUrl + '")'
+      e[1] = '=setAccountName("' + postUrl + '")';
+      e[2] = '';
     }
     return e;
   });
@@ -43,11 +44,11 @@ function setAccountName(postUrl) {
 }
 
 function setFollowerCounts() {
-  var range = SHEET.getRange(2, 2, SHEET.getLastRow(), 3);
+  var range = SHEET.getRange(2, 2, SHEET.getLastRow(), 2);
   var data = range.getValues().map(function (e) {
     var accountName = e[0];
-    if (accountName) {
-      e[1] = '=setFollowerCount("' + accountName + '")'
+    if (accountName && accountName !== '#ERROR!') {
+      e[1] = '=setFollowerCount("' + accountName + '")';
     }
     return e;
   });
