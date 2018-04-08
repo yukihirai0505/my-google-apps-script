@@ -21,9 +21,8 @@ function setSymbols() {
   });
 }
 
-// TODO: 一気にデータセットするやつと1日ずつ取得するやつ
 function setPastData() {
-  var filterDateTime = new Date(2018, 1, 1).getTime();
+  var filterDateTime = new Date(2018, 0, 1).getTime();
 
   function getKLines(symbol) {
     Utilities.sleep(500);
@@ -55,10 +54,11 @@ function setPastData() {
   }
 
   var symbols = SHEETS[0].getRange(2, 1, SHEETS[0].getLastRow(), 1).getValues().filter(function (e) {
-    if (e[0]) {
-      return e;
-    }
-  });
+      if (e[0]) {
+        return e;
+      }
+    }),
+    dateColumns;
   Logger.log(symbols);
   symbols.forEach(function (e, i) {
     var data = getKLines(e[0]);
@@ -77,11 +77,18 @@ function setPastData() {
     // 1列目だけ日付も一緒にいれる
     if (i === 0) {
       SHEETS.forEach(function (sheet) {
+        dateColumns = dates;
         sheet.getRange(1, 2, 1, dates.length).setValues([dates]);
       });
     }
-    SHEETS[0].getRange(i + 2, 2, 1, lowData.length).setValues([lowData]);
-    SHEETS[1].getRange(i + 2, 2, 1, highData.length).setValues([highData]);
-    SHEETS[2].getRange(i + 2, 2, 1, volData.length).setValues([volData]);
+    var fromDateIndex;
+    dateColumns.forEach(function (e, i) {
+      if (e.getTime() === dates[0].getTime()) {
+        fromDateIndex = i + 2;
+      }
+    });
+    SHEETS[0].getRange(i + 2, fromDateIndex, 1, lowData.length).setValues([lowData]);
+    SHEETS[1].getRange(i + 2, fromDateIndex, 1, highData.length).setValues([highData]);
+    SHEETS[2].getRange(i + 2, fromDateIndex, 1, volData.length).setValues([volData]);
   });
 }
