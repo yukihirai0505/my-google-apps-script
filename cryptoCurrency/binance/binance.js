@@ -3,17 +3,6 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
   BINANCE_API_URL = 'https://api.binance.com',
   BTC_SYMBOL = 'BTC';
 
-function onOpen() {
-  function showMenu() {
-    var menu = [
-      {name: "Get Crypto Currency Data", functionName: "setData"}
-    ];
-    BK.addMenu("Custom Management", menu);
-  }
-
-  showMenu();
-}
-
 function fetchJson(url) {
   return JSON.parse(UrlFetchApp.fetch(url));
 }
@@ -33,44 +22,46 @@ function setSymbols() {
 }
 
 // TODO: 一気にデータセットするやつと1日ずつ取得するやつ
-function setData() {
-  var filterDate = new Date(2018, 1, 1).getTime();
+function setPastData() {
+  var filterDateTime = new Date(2018, 1, 1).getTime();
+
   function getKLines(symbol) {
     Utilities.sleep(500);
-    var kLines = fetchJson(BINANCE_API_URL + '/api/v1/klines?symbol=' + symbol + '&interval=1d').map(function (e) {
-      var openTime = kLines[0],
-        openPrice = kLines[1],
-        highPrice = kLines[2],
-        lowPrice = kLines[3],
-        closePrice = kLines[4],
-        volume = kLines[5],
-        closeTime = kLines[6],
-        quoteAssetVolume = kLines[7],
-        numberOfTrades = kLines[8],
-        takerBuyBaseAssetVol = kLines[9],
-        takerBuyQuoteAssetVol = kLines[10],
-        ignore = kLines[11];
+    var kLines = fetchJson(BINANCE_API_URL + '/api/v1/klines?symbol=' + symbol + BTC_SYMBOL + '&interval=1d').map(function (e) {
+      var openTime = e[0],
+        openPrice = e[1],
+        highPrice = e[2],
+        lowPrice = e[3],
+        closePrice = e[4],
+        volume = e[5],
+        closeTime = e[6],
+        quoteAssetVolume = e[7],
+        numberOfTrades = e[8],
+        takerBuyBaseAssetVol = e[9],
+        takerBuyQuoteAssetVol = e[10],
+        ignore = e[11];
       return {
         openTime: openTime,
         highPrice: highPrice,
         lowPrice: lowPrice,
         volume: volume
       };
+    }).filter(function (e) {
+      if (e.openTime > filterDateTime) {
+        return e;
+      }
     });
-    // TODO filter 2018/01/01以降
-
+    Logger.log(kLines);
     return kLines;
   }
 
-  /*
-  var range = SHEET.getRange(2, 1, SHEET.getLastRow(), 1).filter(function (e) {
+  var symbols = SHEETS[0].getRange(2, 1, SHEETS[0].getLastRow(), 1).getValues().filter(function (e) {
       if (e[0]) {
         return e;
       }
     }),
-    data = range.getValues().map(function (e, i) {
+    data = symbols.map(function (e, i) {
       return getKLines(e[0]);
     });
   Logger.log(data);
-  */
 }
