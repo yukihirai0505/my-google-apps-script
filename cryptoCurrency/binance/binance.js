@@ -20,37 +20,21 @@ function fetchJson(url) {
 
 function setSymbols() {
   var data = fetchJson(BINANCE_API_URL + '/api/v1/exchangeInfo').symbols.filter(function (e) {
-      if (e.symbol.indexOf(BTC_SYMBOL) !== -1) {
-        return e.symbol;
-      }
-    }).map(function (e) {
-      return [e.symbol.replace(BTC_SYMBOL, '')];
-    });
-  SHEETS.forEach(function(sheet) {
+    if (e.symbol.indexOf(BTC_SYMBOL) !== -1) {
+      return e.symbol;
+    }
+  }).map(function (e) {
+    return [e.symbol.replace(BTC_SYMBOL, '')];
+  });
+  SHEETS.forEach(function (sheet) {
     var range = sheet.getRange(2, 1, data.length, 1);
     range.setValues(data);
   });
 }
 
+// TODO: 一気にデータセットするやつと1日ずつ取得するやつ
 function setData() {
-
-  /**
-   *
-
-   1499040000000,      // Open time
-   "0.01634790",       // Open
-   "0.80000000",       // High
-   "0.01575800",       // Low
-   "0.01577100",       // Close
-   "148976.11427815",  // Volume
-   1499644799999,      // Close time
-   "2434.19055334",    // Quote asset volume
-   308,                // Number of trades
-   "1756.87402397",    // Taker buy base asset volume
-   "28.46694368",      // Taker buy quote asset volume
-   "17928899.62484339" // Ignore
-
-   */
+  var filterDate = new Date(2018, 1, 1).getTime();
   function getKLines(symbol) {
     Utilities.sleep(500);
     var kLines = fetchJson(BINANCE_API_URL + '/api/v1/klines?symbol=' + symbol + '&interval=1d').map(function (e) {
@@ -73,6 +57,8 @@ function setData() {
         volume: volume
       };
     });
+    // TODO filter 2018/01/01以降
+
     return kLines;
   }
 
