@@ -41,27 +41,47 @@ function setPastData() {
         takerBuyQuoteAssetVol = e[10],
         ignore = e[11];
       return {
-        openTime: openTime,
+        openTime: new Date(openTime),
         highPrice: highPrice,
         lowPrice: lowPrice,
         volume: volume
       };
     }).filter(function (e) {
-      if (e.openTime > filterDateTime) {
+      if (e.openTime.getTime() > filterDateTime) {
         return e;
       }
     });
-    Logger.log(kLines);
     return kLines;
   }
 
   var symbols = SHEETS[0].getRange(2, 1, SHEETS[0].getLastRow(), 1).getValues().filter(function (e) {
-      if (e[0]) {
-        return e;
-      }
-    }),
-    data = symbols.map(function (e, i) {
-      return getKLines(e[0]);
+    if (e[0]) {
+      return e;
+    }
+  });
+  Logger.log(symbols);
+  symbols.forEach(function (e, i) {
+    var data = getKLines(e[0]);
+    var dates = data.map(function (e) {
+      return e.openTime;
     });
-  Logger.log(data);
+    var lowData = data.map(function (e) {
+      return e.lowPrice;
+    });
+    var highData = data.map(function (e) {
+      return e.highPrice;
+    });
+    var volData = data.map(function (e) {
+      return e.volume;
+    });
+    // 1列目だけ日付も一緒にいれる
+    if (i === 0) {
+      SHEETS.forEach(function (sheet) {
+        sheet.getRange(1, 2, 1, dates.length).setValues([dates]);
+      });
+    }
+    SHEETS[0].getRange(i + 2, 2, 1, lowData.length).setValues([lowData]);
+    SHEETS[1].getRange(i + 2, 2, 1, highData.length).setValues([highData]);
+    SHEETS[2].getRange(i + 2, 2, 1, volData.length).setValues([volData]);
+  });
 }
