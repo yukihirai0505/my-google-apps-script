@@ -1,5 +1,5 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
-  SHEET = BK.getSheetByName('binance'),
+  SHEETS = BK.getSheets(),
   BINANCE_API_URL = 'https://api.binance.com',
   BTC_SYMBOL = 'BTC';
 
@@ -25,9 +25,11 @@ function setSymbols() {
       }
     }).map(function (e) {
       return [e.symbol.replace(BTC_SYMBOL, '')];
-    }),
-    range = SHEET.getRange(2, 1, data.length, 1);
-  range.setValues(data);
+    });
+  SHEETS.forEach(function(sheet) {
+    var range = sheet.getRange(2, 1, data.length, 1);
+    range.setValues(data);
+  });
 }
 
 function setData() {
@@ -74,6 +76,7 @@ function setData() {
     return kLines;
   }
 
+  /*
   var range = SHEET.getRange(2, 1, SHEET.getLastRow(), 1).filter(function (e) {
       if (e[0]) {
         return e;
@@ -83,4 +86,5 @@ function setData() {
       return getKLines(e[0]);
     });
   Logger.log(data);
+  */
 }
