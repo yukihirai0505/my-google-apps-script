@@ -24,7 +24,7 @@ function showMenu() {
  * Set Instagram data
  */
 function setInstagramData() {
-  var postRange = SHEET.getRange(3, 2, SHEET.getLastRow(), 12);
+  var postRange = SHEET.getRange(3, 2, SHEET.getLastRow(), 13);
   var data = postRange.getValues().map(function (e) {
     return getPostData(e);
   });
@@ -55,6 +55,7 @@ function getPostData(post) {
     var postObj = requestJson(postUrl);
     var postData = postObj.entry_data.PostPage[0].graphql.shortcode_media,
       ownerData = postObj.entry_data.PostPage[0].graphql.shortcode_media.owner,
+      videoViewCount = postData.video_view_count,
       imageUrl = postData.display_url,
       userName = ownerData.full_name,
       userAccountName = ownerData.username;
@@ -70,7 +71,7 @@ function getPostData(post) {
         return e.node.owner.username + ": " + e.node.text;
       }).join("\n");
     return [
-      postUrl, imageUrl, "=IMAGE(\"" + imageUrl + "\")", userName, userAccountName, followerNum, postDate, likeNum, commentNum, text, hashTag ? hashTag.join("\n") : hashTag, comments
+      postUrl, imageUrl, "=IMAGE(\"" + imageUrl + "\")", userName, userAccountName, followerNum, postDate, likeNum, commentNum, videoViewCount, text, hashTag ? hashTag.join("\n") : hashTag, comments
     ];
   } catch (err) {
     post[2] = err.message;
