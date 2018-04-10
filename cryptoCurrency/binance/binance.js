@@ -1,11 +1,11 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
-  SHEETS = BK.getSheets(),
-  LOW_SHEET = SHEETS[0],
-  HIGH_SHEET = SHEETS[1],
-  VOL_SHEET = SHEETS[2],
+  LOW_SHEET = BK.getSheetByName('最安値_日別'),
+  HIGH_SHEET = BK.getSheetByName('最高値_日別'),
+  VOL_SHEET = BK.getSheetByName('出来高_日別'),
+  SHEETS = [LOW_SHEET, HIGH_SHEET, VOL_SHEET],
   BINANCE_API_URL = 'https://api.binance.com',
   BTC_SYMBOL = 'BTC',
-  SYMBOLS = SHEETS[0].getRange(2, 1, SHEETS[0].getLastRow(), 1).getValues().filter(function (e) {
+  SYMBOLS = LOW_SHEET.getRange(2, 1, LOW_SHEET.getLastRow(), 1).getValues().filter(function (e) {
     if (e[0]) {
       return e;
     }
