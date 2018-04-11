@@ -33,7 +33,7 @@ function postUpdateStatus() {
   });
 }
 
-// Twitter Account Data API
+// Search users by query
 function usersSearch(accountName) {
   var service = twitterWebService.getService();
   return service.fetch('https://api.twitter.com/1.1/users/search.json?q=' + accountName, {
@@ -41,6 +41,7 @@ function usersSearch(accountName) {
   });
 }
 
+// Twitter User Account Info API
 function doGet(e) {
   var accountName = e.parameter.q;
   var output = ContentService.createTextOutput();
