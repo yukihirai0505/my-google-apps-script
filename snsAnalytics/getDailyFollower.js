@@ -2,11 +2,15 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
   TWITTER_SHEET = BK.getSheetByName('Twitter'),
   TWITTER_DATE_COLUMN_START_COLUMN = 6,
   TWITTER_ACCOUNT_NAME_START_ROW = 2,
-  YOUTUBE_SHEET = BK.getSheetByName('Youtube');
+  YOUTUBE_ACCOUNT_NAME_START_ROW = 2,
+  YOUTUBE_DATE_COLUMN_START_COLUMN = 6,
+  YOUTUBE_SHEET = BK.getSheetByName('Youtube'),
+  SNS_SHEET_INFO = {
+    twitter: getSnsSheetInfo('Twitter', TWITTER_SHEET, TWITTER_DATE_COLUMN_START_COLUMN, TWITTER_ACCOUNT_NAME_START_ROW),
+    youtube: getSnsSheetInfo('Youtube', YOUTUBE_SHEET, YOUTUBE_DATE_COLUMN_START_COLUMN, YOUTUBE_ACCOUNT_NAME_START_ROW)
+  };
 
-function fetchJson(url) {
-  return JSON.parse(UrlFetchApp.fetch(url));
-}
+// Twitter
 
 function getTwitterAccountInfoJson(accountName) {
   var twitterAPIUrl = 'https://script.google.com/macros/s/AKfycbwiFrBiaQcCbk2FqV8S2yuteQTml3GZgsXNLW237_YE7B3NV4Q/exec?q=' + accountName;
@@ -27,7 +31,7 @@ function setTwitterAccountInfo() {
     var accountName = accountInfo[0];
     var response = getTwitterAccountInfoJson(accountName);
     if (response) {
-      accountInfo[1] = response.profile_image_url_https ? '=IMAGE("' + response.profile_image_url_https + '", 3)' : '';
+      accountInfo[1] = getImageFormula(response.profile_image_url_https, 3);
       accountInfo[2] = response.name ? response.name : '';
       accountInfo[3] = response.description ? response.description : '';
       accountInfo[4] = response.url ? response.url : '';
@@ -37,39 +41,113 @@ function setTwitterAccountInfo() {
   TWITTER_SHEET.getRange(TWITTER_ACCOUNT_NAME_START_ROW, 1, data.length, 5).setValues(data);
 }
 
-function setDailyTwitterFollowerData() {
+function setTwitterFollowerDataDaily() {
+  setDailyData(SNS_SHEET_INFO.twitter);
+}
+
+// YouTube
+
+function getYouTubeAPIJson(part, id) {
+  var baseUrl = 'https://script.google.com/macros/s/AKfycbwqwOpjhRD9PUha58V1NrPhScFBfNCk6lZid4SHMyipnWxDdy8/exec';
+  var effectiveUrl = baseUrl + '?part=' + part + '&id=' + id;
+  Logger.log(effectiveUrl);
+  return fetchJson(effectiveUrl);
+}
+
+function setYouTubeAccountInfo() {
+  var channelInfoRange = YOUTUBE_SHEET.getRange(YOUTUBE_ACCOUNT_NAME_START_ROW, 1, YOUTUBE_SHEET.getLastRow(), 5).getValues().filter(function (e) {
+    if (e[0]) {
+      return e;
+    }
+  });
+  var data = channelInfoRange.map(function (channelInfo) {
+    var channelId = channelInfo[0];
+    var response = getYouTubeAPIJson('snippet', channelId);
+    if (response && response.items && response.items[0]) {
+      var item = response.items[0];
+      var snippet = item.snippet;
+      channelInfo[1] = getImageFormula(snippet.thumbnails.medium.url);
+      channelInfo[2] = snippet.title;
+      channelInfo[3] = snippet.description ? snippet.description : '';
+      channelInfo[4] = 'https://www.youtube.com/channel/' + channelId;
+    }
+    return channelInfo;
+  });
+  YOUTUBE_SHEET.getRange(YOUTUBE_ACCOUNT_NAME_START_ROW, 1, data.length, 5).setValues(data);
+}
+
+function setYouTubeChannelSubscriberCountDaily() {
+  setDailyData(SNS_SHEET_INFO.youtube);
+}
+
+// Common
+function getSnsSheetInfo(name, sheet, startDateColumn, startKeyRow) {
+  return {
+    name: name,
+    sheet: sheet,
+    startDateColumn: startDateColumn,
+    startKeyRow: startKeyRow
+  }
+}
+
+function fetchJson(url) {
+  return JSON.parse(UrlFetchApp.fetch(url));
+}
+
+function setDailyData(sheetInfo) {
   var today = new Date(),
-    dateValues = TWITTER_SHEET.getRange(1, TWITTER_DATE_COLUMN_START_COLUMN, 1, TWITTER_SHEET.getLastColumn()).getValues().filter(function (e) {
+    sheet = sheetInfo.sheet,
+    startDateColumn = sheetInfo.startDateColumn,
+    startKeyRow = sheetInfo.startKeyRow,
+    dateValues = sheet.getRange(1, startDateColumn, 1, sheet.getLastColumn()).getValues().filter(function (e) {
       if (e[0]) {
         return e;
       }
     })[0],
-    accountNames = TWITTER_SHEET.getRange(TWITTER_ACCOUNT_NAME_START_ROW, 1, TWITTER_SHEET.getLastRow(), 1).getValues().filter(function (e) {
+    keyValues = sheet.getRange(startKeyRow, 1, sheet.getLastRow(), 1).getValues().filter(function (e) {
       if (e[0]) {
         return e;
       }
     });
-  accountNames.map(function (accountNameData, accountNameIndex) {
+  keyValues.map(function (data, keyIndex) {
     var dateColumnNum,
-      accountName = accountNameData[0];
+      keyName = data[0];
     if (dateValues) {
       dateValues.forEach(function (dateVal, dateIndex) {
         if (dateFormat(new Date(dateVal)) === dateFormat(today)) {
-          dateColumnNum = dateIndex + TWITTER_DATE_COLUMN_START_COLUMN;
+          dateColumnNum = dateIndex + startDateColumn;
         }
       });
     }
     if (!dateColumnNum) {
       // If there is no specified date column, set new date column (only first account name index)
-      dateColumnNum = dateValues ? dateValues.length + 1 : TWITTER_DATE_COLUMN_START_COLUMN;
-      if (accountNameIndex === 0) {
-        TWITTER_SHEET.getRange(1, dateColumnNum).setValue(today);
+      dateColumnNum = dateValues ? dateValues.length + 1 : startDateColumn;
+      if (keyIndex === 0) {
+        sheet.getRange(1, dateColumnNum).setValue(today);
       }
     }
-    var response = getTwitterAccountInfoJson(accountName);
-    var followerCount = response ? response.followers_count : 'not found';
-    TWITTER_SHEET.getRange(accountNameIndex + TWITTER_ACCOUNT_NAME_START_ROW, dateColumnNum).setValue(followerCount);
+    if (sheetInfo.name === SNS_SHEET_INFO.twitter.name) {
+      var twResponse = getTwitterAccountInfoJson(keyName);
+      var followerCount = twResponse ? twResponse.followers_count : 'not found';
+      sheet.getRange(keyIndex + startKeyRow, dateColumnNum).setValue(followerCount);
+    } else if (sheetInfo.name === SNS_SHEET_INFO.youtube.name) {
+      var ytResponse = getYouTubeAPIJson('statistics', keyName);
+      var item = ytResponse.items[0];
+      if (item && item.statistics) {
+        var statistics = item.statistics;
+        var subscriberCount = statistics.subscriberCount ? statistics.subscriberCount : 'not found';
+        sheet.getRange(keyIndex + startKeyRow, dateColumnNum).setValue(subscriberCount);
+      }
+    }
   });
+}
+
+
+function getImageFormula(imageUrl, mode) {
+  if (imageUrl) {
+    return mode ? '=IMAGE("' + imageUrl + '", ' + mode + ')' : '=IMAGE("' + imageUrl + '")';
+  }
+  return '';
 }
 
 function dateFormat(date) {
