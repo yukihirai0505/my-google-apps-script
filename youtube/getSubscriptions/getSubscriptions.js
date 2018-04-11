@@ -1,6 +1,6 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
   YOUTUBE_CHANNEL_SHEET = BK.getSheetByName('Youtube'),
-  YOUTUBE_API_KEY = PropertiesService.getScriptProperties().getProperty('SLACK_ACCESS_TOKEN');
+  YOUTUBE_API_KEY = PropertiesService.getScriptProperties().getProperty('YOUTUBE_API_KEY');
 
 function onOpen() {
   function showMenu() {
