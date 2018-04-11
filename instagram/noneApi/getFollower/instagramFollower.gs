@@ -29,22 +29,22 @@ function setIgFollowerData() {
       var response = UrlFetchApp.fetch(encodeURI(accountUrl), {muteHttpExceptions: true});
       var rs = response.getContentText('UTF-8').match(/<script type="text\/javascript">window\._sharedData =([\s\S]*?);<\/script>/i);
       var json = JSON.parse(rs[1]);
-      return json.entry_data.ProfilePage[0].user;
+      return json.entry_data.ProfilePage[0].graphql.user;
     }
     
     try {
       var info = getInstagramUserInfo(),
-        followerCount = info.followed_by.count,
+        followerCount = info.edge_followed_by.count,
         monthlyMediaNodes = info.media.nodes.filter(function (e) {
-          if (new Date(e.date * 1000).getTime() >= ONE_MONTH_AGO.getTime()) {
+          if (new Date(e.node.taken_at_timestamp * 1000).getTime() >= ONE_MONTH_AGO.getTime()) {
             return e;
           }
         }),
         totalLikes = monthlyMediaNodes.reduce(function (sum, value) {
-          return sum + value.likes.count;
+          return sum + value.node.edge_liked_by.count;
         }, 0),
         totalComments = monthlyMediaNodes.reduce(function (sum, value) {
-          return sum + value.comments.count;
+          return sum + value.node.edge_media_to_comment.count;
         }, 0),
         privateMessage = info.is_private ? "private" : "open",
         engWithComments = (totalLikes + totalComments) / (followerCount * monthlyMediaNodes.length),
