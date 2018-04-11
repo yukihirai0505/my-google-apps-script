@@ -1,13 +1,15 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
-  TWITTER_SHEET = BK.getSheetByName('Twitter'),
+  TWITTER_SHEET_NAME = 'Twitter',
+  YOUTUBE_SHEET_NAME = 'YouTube',
+  TWITTER_SHEET = BK.getSheetByName(TWITTER_SHEET_NAME),
   TWITTER_DATE_COLUMN_START_COLUMN = 6,
   TWITTER_ACCOUNT_NAME_START_ROW = 2,
   YOUTUBE_ACCOUNT_NAME_START_ROW = 2,
   YOUTUBE_DATE_COLUMN_START_COLUMN = 6,
-  YOUTUBE_SHEET = BK.getSheetByName('Youtube'),
+  YOUTUBE_SHEET = BK.getSheetByName(YOUTUBE_SHEET_NAME),
   SNS_SHEET_INFO = {
-    twitter: getSnsSheetInfo('Twitter', TWITTER_SHEET, TWITTER_DATE_COLUMN_START_COLUMN, TWITTER_ACCOUNT_NAME_START_ROW),
-    youtube: getSnsSheetInfo('Youtube', YOUTUBE_SHEET, YOUTUBE_DATE_COLUMN_START_COLUMN, YOUTUBE_ACCOUNT_NAME_START_ROW)
+    twitter: getSnsSheetInfo(TWITTER_SHEET_NAME, TWITTER_SHEET, TWITTER_DATE_COLUMN_START_COLUMN, TWITTER_ACCOUNT_NAME_START_ROW),
+    youtube: getSnsSheetInfo(YOUTUBE_SHEET_NAME, YOUTUBE_SHEET, YOUTUBE_DATE_COLUMN_START_COLUMN, YOUTUBE_ACCOUNT_NAME_START_ROW)
   };
 
 // Twitter
@@ -109,7 +111,7 @@ function setDailyData(sheetInfo) {
         return e;
       }
     });
-  keyValues.map(function (data, keyIndex) {
+  keyValues.forEach(function (data, keyIndex) {
     var dateColumnNum,
       keyName = data[0];
     if (dateValues) {
