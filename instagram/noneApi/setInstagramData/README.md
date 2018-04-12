@@ -1,3 +1,0 @@
-# Script for Instargam
-
-## Usage

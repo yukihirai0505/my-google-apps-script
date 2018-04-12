@@ -1,4 +1,0 @@
-# Script for cosme
-
-## Usage
-

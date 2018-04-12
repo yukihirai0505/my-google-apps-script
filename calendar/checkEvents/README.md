@@ -1,7 +1,0 @@
-# Auto event check
-
-
-
-## Usage
-
-
