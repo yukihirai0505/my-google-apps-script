@@ -1,5 +1,5 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
-  HASHTAG_SHEET = BK.getSheetByName("hashtag");
+  HASHTAG_SHEET = BK.getSheetByName('hashtag');
 
 function onOpen() {
   showMenu();
@@ -8,9 +8,9 @@ function onOpen() {
 function showMenu() {
   var ss = SpreadsheetApp.getActiveSpreadsheet(),
     menu = [
-      {name: "Get Tag Info", functionName: "setTagData"}
+      {name: 'Get Tag Info', functionName: 'setTagData'}
     ];
-  ss.addMenu("Custom menu", menu);
+  ss.addMenu('Custom menu', menu);
 }
 
 function setTagData() {
@@ -26,9 +26,9 @@ function getTagData(hashTag) {
   if (!tag) {
     return hashTag;
   }
-  var tagUrl = encodeURI("https://www.instagram.com/explore/tags/" + tag.replace("#", ""));
+  var tagUrl = encodeURI('https://www.instagram.com/explore/tags/' + tag.replace('#', ''));
   return [
-    tag, "=setTagCount(\"" + tagUrl + "\")", tagUrl
+    tag, '=setTagCount(\'' + tagUrl + '\')', tagUrl
   ];
 }
 

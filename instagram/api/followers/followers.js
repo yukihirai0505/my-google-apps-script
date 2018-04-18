@@ -9,11 +9,11 @@ function requestFollowers(apiUrl, followers) {
 }
 
 function getFollowers() {
-  var token = "",
-    followers = requestFollowers("https://api.instagram.com/v1/users/self/followed-by?access_token=" + token, []),
-    to = "",
+  var token = '',
+    followers = requestFollowers('https://api.instagram.com/v1/users/self/followed-by?access_token=' + token, []),
+    to = '',
     body = followers.map(function (e) {
       return e.username;
     });
-  MailApp.sendEmail(to, "followers", body.join('\n'));
+  MailApp.sendEmail(to, 'followers', body.join('\n'));
 }

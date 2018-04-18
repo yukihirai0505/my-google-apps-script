@@ -1,5 +1,5 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
-  REVIEW_SHEET = BK.getSheetByName("review");
+  REVIEW_SHEET = BK.getSheetByName('review');
 
 function onOpen() {
   showMenu();
@@ -7,7 +7,7 @@ function onOpen() {
 
 function showMenu() {
   var menu = [
-    {name: "setReviewData", functionName: "setReviewData"}
+    {name: 'setReviewData', functionName: 'setReviewData'}
   ];
   BK.addMenu("Custom Menu", menu);
 }

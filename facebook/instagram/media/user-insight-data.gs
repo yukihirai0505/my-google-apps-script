@@ -15,13 +15,13 @@ function setUserInsightData() {
       startColumn = 2,
       lastColumn = USER_SHEET.getLastColumn(),
       values = USER_SHEET.getRange(row, startColumn, row, lastColumn),
-      dateIndex = "";
+      dateIndex = '';
     values.getValues()[0].filter(function (e, i) {
       if (e && dateFormat(e) === yesterday) {
         dateIndex = i
       }
     });
-    if (dateIndex !== "") {
+    if (dateIndex !== '') {
       return USER_SHEET.getRange(row, startColumn + dateIndex);
     } else {
       return USER_SHEET.getRange(row, lastColumn + 1).setValue(yesterday)

@@ -1,8 +1,8 @@
-var OWNER = "yukihirai0505",
-  REPO = "github-w-maker",
+var OWNER = 'yukihirai0505',
+  REPO = 'github-w-maker',
   // GitHub access token from https://github.com/settings/tokens
   GITHUB_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('GITHUB_ACCESS_TOKEN'),
-  CREATE_FILE_URL = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/:path?access_token=" + GITHUB_ACCESS_TOKEN;
+  CREATE_FILE_URL = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/:path?access_token=' + GITHUB_ACCESS_TOKEN;
 
 // Create a file => https://developer.github.com/v3/repos/contents/#create-a-file
 function createFile() {

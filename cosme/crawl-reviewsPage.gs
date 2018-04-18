@@ -1,5 +1,5 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet(),
-  REVIEW_SHEET = BK.getSheetByName("review"),
+  REVIEW_SHEET = BK.getSheetByName('review'),
   RANGE_VALUES = REVIEW_SHEET.getRange(2, 2, 2, 1).getValues(),
   PRODUCT_REVIEW_URL = RANGE_VALUES[0][0],
   PAGE_INDEX = RANGE_VALUES[1][0],
@@ -11,9 +11,9 @@ function onOpen() {
 
 function showMenu() {
   var menu = [
-    {name: "setReviewData", functionName: "setReviewData"}
+    {name: 'setReviewData', functionName: 'setReviewData'}
   ];
-  BK.addMenu("Custom Menu", menu);
+  BK.addMenu('Custom Menu', menu);
 }
 
 function setReviewData() {

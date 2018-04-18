@@ -1,5 +1,5 @@
 function sendForm(e) {
-  var to = "hoge@gmail.com";
+  var to = 'hoge@gmail.com';
   
   function getMessage(itemResponses) {
     var subject = '【Inquiry】 ';
@@ -34,6 +34,6 @@ function sendForm(e) {
     };
     MailApp.sendEmail(to, subject, body, options);
   } catch (err) {
-    MailApp.sendEmail(to, "Error", err);
+    MailApp.sendEmail(to, 'Error', err);
   }
 }

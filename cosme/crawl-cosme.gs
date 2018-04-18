@@ -1,5 +1,5 @@
 var BK = SpreadsheetApp.getActiveSpreadsheet();
-var ACCOUNT_SHEET = BK.getSheetByName("cosme");
+var ACCOUNT_SHEET = BK.getSheetByName('cosme');
 
 
 function onOpen() {
@@ -8,9 +8,9 @@ function onOpen() {
 
 function showMenu() {
   var menu = [
-    {name: "Set Cosme Data", functionName: "setData"}
+    {name: 'Set Cosme Data', functionName: 'setData'}
   ];
-  BK.addMenu("Custom Menu", menu);
+  BK.addMenu('Custom Menu', menu);
 }
 
 function setData() {

@@ -4,9 +4,9 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
 function onOpen() {
   function showMenu() {
     var menu = [
-      {name: "Get Crypto Currency Data", functionName: "setData"}
+      {name: 'Get Crypto Currency Data', functionName: 'setData'}
     ];
-    BK.addMenu("Custom Management", menu);
+    BK.addMenu('Custom Management', menu);
   }
 
   showMenu();

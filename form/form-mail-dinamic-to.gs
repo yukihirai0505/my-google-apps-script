@@ -11,7 +11,7 @@ function sendForm(e) {
         to = answer.map(function (v) {
           switch (v) {
             case 'hoge1':
-              return "hoge+1@gmail.com";
+              return 'hoge+1@gmail.com';
               break;
             case 'hoge2':
               return 'hoge+2@gmail.com';
@@ -43,6 +43,6 @@ function sendForm(e) {
       MailApp.sendEmail(to, subject, body, options);
     }
   } catch (err) {
-    MailApp.sendEmail("error@gmail.com", "Error", err);
+    MailApp.sendEmail('error@gmail.com', 'Error', err);
   }
 }
