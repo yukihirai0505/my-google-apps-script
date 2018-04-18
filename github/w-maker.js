@@ -2,26 +2,29 @@ var OWNER = "yukihirai0505",
   REPO = "github-w-maker",
   // GitHub access token from https://github.com/settings/tokens
   GITHUB_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('GITHUB_ACCESS_TOKEN'),
-  CREATE_COMMIT_URL = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/git/commits?access_token=" + GITHUB_ACCESS_TOKEN,
   CREATE_FILE_URL = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/:path?access_token=" + GITHUB_ACCESS_TOKEN;
 
-// Create a file api => https://developer.github.com/v3/repos/contents/#create-a-file
+// Create a file => https://developer.github.com/v3/repos/contents/#create-a-file
 function createFile() {
   var message = 'w maker bot',
-    payload = JSON.stringify({
+    params = {
       message: message,
       committer: {
         name: 'GitHub w Maker bot',
         email: 'example@ex.com'
       },
       content: Utilities.base64Encode(message)
-    }),
-    options = {
-      "method": "PUT",
-      "payload": payload
-    };
-  const data = JSON.parse(UrlFetchApp.fetch(CREATE_FILE_URL.replace(':path', getRandomString()), options).getContentText());
+    },
+    data = fetchJson(CREATE_FILE_URL.replace(':path', getRandomString()), 'PUT', params);
   Logger.log(data);
+}
+
+function fetchJson(url, method, params) {
+  var options = {
+    method: method,
+    payload: JSON.stringify(params)
+  };
+  return JSON.parse(UrlFetchApp.fetch(url, options).getContentText());
 }
 
 function getRandomString() {
