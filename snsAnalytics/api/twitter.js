@@ -25,11 +25,11 @@ function authCallback(request) {
 }
 
 // Post test tweet
-function postUpdateStatus() {
+function postUpdateStatus(message) {
   var service = twitterWebService.getService();
   var response = service.fetch('https://api.twitter.com/1.1/statuses/update.json', {
     method: 'post',
-    payload: {status: 'test'}
+    payload: {status: message}
   });
 }
 
@@ -53,4 +53,8 @@ function doGet(e) {
     output.setContent('not found q parameter');
   }
   return output;
+}
+
+function doPost(e) {
+  postUpdateStatus(e.parameter.message);
 }

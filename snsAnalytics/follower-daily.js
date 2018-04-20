@@ -4,6 +4,7 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
   TWITTER_SHEET = BK.getSheetByName(TWITTER_SHEET_NAME),
   TWITTER_DATE_COLUMN_START_COLUMN = 6,
   TWITTER_ACCOUNT_NAME_START_ROW = 2,
+  TWITTER_API = 'https://script.google.com/macros/s/AKfycbwiFrBiaQcCbk2FqV8S2yuteQTml3GZgsXNLW237_YE7B3NV4Q/exec',
   YOUTUBE_ACCOUNT_NAME_START_ROW = 2,
   YOUTUBE_DATE_COLUMN_START_COLUMN = 6,
   YOUTUBE_SHEET = BK.getSheetByName(YOUTUBE_SHEET_NAME),
@@ -15,7 +16,7 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
 // Twitter
 
 function getTwitterAccountInfoJson(accountName) {
-  var twitterAPIUrl = 'https://script.google.com/macros/s/AKfycbwiFrBiaQcCbk2FqV8S2yuteQTml3GZgsXNLW237_YE7B3NV4Q/exec?q=' + accountName;
+  var twitterAPIUrl = TWITTER_API + '?q=' + accountName;
   return fetchJson(twitterAPIUrl).filter(function (res) {
     if (res.screen_name === accountName) {
       return res;
@@ -23,13 +24,18 @@ function getTwitterAccountInfoJson(accountName) {
   })[0];
 }
 
-function setTwitterAccountInfo() {
-  var accountInfoRange = TWITTER_SHEET.getRange(TWITTER_ACCOUNT_NAME_START_ROW, 1, TWITTER_SHEET.getLastRow(), 5).getValues().filter(function (e) {
-    if (e[0]) {
-      return e;
+function postMessageForTweet(message) {
+  var options = {
+    method : 'post',
+    payload : {
+      message: message
     }
-  });
-  var data = accountInfoRange.map(function (accountInfo) {
+  };
+  UrlFetchApp.fetch(TWITTER_API, options);
+}
+
+function setTwitterAccountInfo() {
+  var data = getKeyValues(SNS_SHEET_INFO.twitter).map(function (accountInfo) {
     var accountName = accountInfo[0];
     var response = getTwitterAccountInfoJson(accountName);
     if (response) {
@@ -41,6 +47,58 @@ function setTwitterAccountInfo() {
     return accountInfo;
   });
   TWITTER_SHEET.getRange(TWITTER_ACCOUNT_NAME_START_ROW, 1, data.length, 5).setValues(data);
+}
+
+function tweetWeeklyRanking() {
+  function compare(a, b) {
+    if (a.diff < b.diff)
+      return -1;
+    if (a.diff > b.diff)
+      return 1;
+    return 0;
+  }
+
+  var sheetInfo = SNS_SHEET_INFO.twitter,
+    startKeyRow = sheetInfo.startKeyRow,
+    startDateColumn = sheetInfo.startDateColumn,
+    today = new Date(),
+    todayIndex,
+    oneWeekAgo = new Date(),
+    oneWeekAgoIndex;
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  getDateValues(sheetInfo).forEach(function (dateVal, dateIndex) {
+    switch (dateFormat(new Date(dateVal))) {
+      case dateFormat(today):
+        todayIndex = dateIndex + startDateColumn;
+        break;
+      case dateFormat(oneWeekAgo):
+        oneWeekAgoIndex = dateIndex + startDateColumn;
+        break;
+    }
+  });
+  var keys = getKeyValues(sheetInfo),
+    todayFollowerCounts = sheetInfo.sheet.getRange(startKeyRow, todayIndex, keys.length, 1).getValues(),
+    oneWeekAgoFollowerCounts = sheetInfo.sheet.getRange(startKeyRow, oneWeekAgoIndex, keys.length, 1).getValues(),
+    data = keys.map(function (key, keyIndex) {
+      var todayFollowerCount = todayFollowerCounts[keyIndex][0],
+        oneWeekAgoFollowerCount = oneWeekAgoFollowerCounts[keyIndex][0];
+      return {
+        screen_name: key[0],
+        name: key[2],
+        today_follower_count: todayFollowerCount,
+        one_week_ago_follower_count: oneWeekAgoFollowerCount,
+        diff: oneWeekAgoFollowerCount ? todayFollowerCount - oneWeekAgoFollowerCount: 0
+      }
+    });
+  var top3 = data.sort(compare).reverse().slice(0, 3),
+  no1 = top3[0],
+  no2 = top3[1],
+  no3 = top3[2];
+  var message = '【週間フォロワー増ランキング】\n\n1位 @' + no1.screen_name + ' ↑' + no1.diff +
+    '\n2位 @' + no2.screen_name + ' ↑' + no2.diff +
+    '\n3位 @' + no3.screen_name + ' ↑' + no3.diff +
+    '\n\nシートに追加して欲しい方はリプかDMください\n↓フォロワー推移管理シート\nhttps://docs.google.com/spreadsheets/d/1KAMC3juzmc2zAJPlCNMdS5hiLUfRc7bUDgcechYvf-k/edit?usp=sharing';
+  postMessageForTweet(message);
 }
 
 function setTwitterFollowerDataDaily() {
@@ -57,12 +115,7 @@ function getYouTubeAPIJson(part, id) {
 }
 
 function setYouTubeAccountInfo() {
-  var channelInfoRange = YOUTUBE_SHEET.getRange(YOUTUBE_ACCOUNT_NAME_START_ROW, 1, YOUTUBE_SHEET.getLastRow(), 5).getValues().filter(function (e) {
-    if (e[0]) {
-      return e;
-    }
-  });
-  var data = channelInfoRange.map(function (channelInfo) {
+  var data = getKeyValues(SNS_SHEET_INFO.youtube).map(function (channelInfo) {
     var channelId = channelInfo[0];
     var response = getYouTubeAPIJson('snippet', channelId);
     if (response && response.items && response.items[0]) {
@@ -92,6 +145,22 @@ function getSnsSheetInfo(name, sheet, startDateColumn, startKeyRow) {
   }
 }
 
+function getKeyValues(sheetInfo) {
+  return sheetInfo.sheet.getRange(sheetInfo.startKeyRow, 1, sheetInfo.sheet.getLastRow(), 5).getValues().filter(function (e) {
+    if (e[0]) {
+      return e;
+    }
+  });
+}
+
+function getDateValues(sheetInfo) {
+  return sheetInfo.sheet.getRange(1, sheetInfo.startDateColumn, 1, sheetInfo.sheet.getLastColumn()).getValues().filter(function (e) {
+    if (e[0]) {
+      return e;
+    }
+  })[0];
+}
+
 function fetchJson(url) {
   return JSON.parse(UrlFetchApp.fetch(url));
 }
@@ -101,16 +170,8 @@ function setDailyData(sheetInfo) {
     sheet = sheetInfo.sheet,
     startDateColumn = sheetInfo.startDateColumn,
     startKeyRow = sheetInfo.startKeyRow,
-    dateValues = sheet.getRange(1, startDateColumn, 1, sheet.getLastColumn()).getValues().filter(function (e) {
-      if (e[0]) {
-        return e;
-      }
-    })[0],
-    keyValues = sheet.getRange(startKeyRow, 1, sheet.getLastRow(), 1).getValues().filter(function (e) {
-      if (e[0]) {
-        return e;
-      }
-    });
+    dateValues = getDateValues(sheetInfo),
+    keyValues = getKeyValues(sheetInfo);
   keyValues.forEach(function (data, keyIndex) {
     var dateColumnNum,
       keyName = data[0];
