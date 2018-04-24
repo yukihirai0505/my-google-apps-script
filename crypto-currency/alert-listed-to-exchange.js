@@ -4,15 +4,19 @@ var SLACK_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty('SL
   FINISH_FLG = PropertiesService.getScriptProperties().getProperty(FINISH_FLG_KEY);
 
 function checkSymbol() {
-  var targetSymbol = 'VIPS',
-    options = {
-      muteHttpExceptions: true
-    },
-    response = UrlFetchApp.fetch('https://www.coinexchange.io/market/' + targetSymbol + '/BTC', options),
-    statusCode = response.getResponseCode();
-  if (!FINISH_FLG && statusCode === 200) {
-    alertToSlack(targetSymbol);
-    PropertiesService.getScriptProperties().setProperty(FINISH_FLG_KEY, true);
+  if (!FINISH_FLG) {
+    var targetSymbol = 'VIPS',
+      options = {
+        muteHttpExceptions: true
+      },
+      response = UrlFetchApp.fetch('https://www.coinexchange.io/market/' + targetSymbol + '/BTC', options),
+      statusCode = response.getResponseCode();
+    if (statusCode === 200) {
+      alertToSlack(targetSymbol);
+      PropertiesService.getScriptProperties().setProperty(FINISH_FLG_KEY, true);
+    }
+  } else {
+    Logger.log('already finish')
   }
 }
 
