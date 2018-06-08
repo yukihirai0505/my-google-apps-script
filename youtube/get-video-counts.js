@@ -60,14 +60,13 @@ function setYoutubeData() {
           }).join(','),
           videoList = getVideoList(videoIds).items,
           videosWithinMonth = filterVideoByDate(videoList, ONE_MONTH_AGO).slice(0, 15),
-          videosWithinWeek = filterVideoByDate(videoList, ONE_WEEK_AGO).slice(0, 6),
           videosBeforeMonth = videoList.filter(function (video) {
             if (new Date(video.snippet.publishedAt).getTime() <= ONE_MONTH_AGO.getTime()) {
               return video;
             }
           }).slice(0, 15);
         e[1] = videos[0].snippet.channelTitle;
-        e[3] = average(videosWithinWeek, function (v) {
+        e[3] = average(videosWithinMonth.slice(0, 6), function (v) {
           return v.statistics.viewCount;
         }, true);
         e[4] = average(videosBeforeMonth, function (v) {
@@ -86,7 +85,7 @@ function setYoutubeData() {
           return v.statistics.viewCount;
         }, false);
       } catch (err) {
-        e[9] = err.message;
+        e[1] = err.message;
       }
       e[2] = "https://www.youtube.com/channel/" + channelId;
     }
