@@ -43,7 +43,7 @@ function setYoutubeData() {
     });
   }
 
-  var range = YOUTUBE_SHEET.getRange(2, 1, YOUTUBE_SHEET.getLastRow(), 8);
+  var range = YOUTUBE_SHEET.getRange(2, 1, YOUTUBE_SHEET.getLastRow(), 9);
   var data = range.getValues().map(function (e, i) {
     var channelId = e[0],
       cellNum = i + 2;
@@ -69,23 +69,24 @@ function setYoutubeData() {
         e[1] = videos[0].snippet.channelTitle;
         e[3] = average(videosWithinWeek, function (v) {
           return v.statistics.viewCount;
-        }, true).toString() + '& "-" &' + average(videosBeforeMonth, function (v) {
+        }, true);
+        e[4] = average(videosBeforeMonth, function (v) {
           return v.statistics.viewCount;
-        }, false).toString();
-        e[4] = average(videosWithinMonth, function (v) {
-          return v.statistics.likeCount;
         }, true);
         e[5] = average(videosWithinMonth, function (v) {
-          return v.statistics.dislikeCount;
+          return v.statistics.likeCount;
         }, true);
         e[6] = average(videosWithinMonth, function (v) {
+          return v.statistics.dislikeCount;
+        }, true);
+        e[7] = average(videosWithinMonth, function (v) {
           return v.statistics.commentCount;
         }, true);
-        e[7] = '=(E' + cellNum + '+G' + cellNum + ')/' + average(videosWithinMonth, function (v) {
+        e[8] = '=(F' + cellNum + '+H' + cellNum + ')/' + average(videosWithinMonth, function (v) {
           return v.statistics.viewCount;
         }, false);
       } catch (err) {
-        e[3] = err.message;
+        e[9] = err.message;
       }
       e[2] = "https://www.youtube.com/channel/" + channelId;
     }
