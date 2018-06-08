@@ -26,8 +26,8 @@ function getTwitterAccountInfoJson(accountName) {
 
 function postMessageForTweet(message) {
   var options = {
-    method : 'post',
-    payload : {
+    method: 'post',
+    payload: {
       message: message
     }
   };
@@ -87,13 +87,13 @@ function tweetWeeklyRanking() {
         name: key[2],
         today_follower_count: todayFollowerCount,
         one_week_ago_follower_count: oneWeekAgoFollowerCount,
-        diff: oneWeekAgoFollowerCount ? todayFollowerCount - oneWeekAgoFollowerCount: 0
+        diff: oneWeekAgoFollowerCount ? todayFollowerCount - oneWeekAgoFollowerCount : 0
       }
     });
   var top3 = data.sort(compare).reverse().slice(0, 3),
-  no1 = top3[0],
-  no2 = top3[1],
-  no3 = top3[2];
+    no1 = top3[0],
+    no2 = top3[1],
+    no3 = top3[2];
   var message = '【週間フォロワー増ランキング】\n\n1位 @' + no1.screen_name + ' ↑' + no1.diff +
     '\n2位 @' + no2.screen_name + ' ↑' + no2.diff +
     '\n3位 @' + no3.screen_name + ' ↑' + no3.diff +
