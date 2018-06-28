@@ -12,14 +12,14 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
       PUBLIC: 'https://api.zaif.jp/api/1',
       PRIVATE: 'https://api.zaif.jp/tapi'
     },
-    PAIR: {
+    CURRENCY: {
       XEM: {
-        JPY: 'xem_jpy',
+        JPY_PAIR: 'xem_jpy',
         LIMIT_DIFF: 0.0001,
         DECIMAL: 0
       },
       ETH: {
-        JPY: 'eth_jpy',
+        JPY_PAIR: 'eth_jpy',
         LIMIT_DIFF: 5,
         DECIMAL: 4
       }
@@ -31,27 +31,27 @@ function getLastPrice(pair) {
 }
 
 function orders() {
-  [ZAIF.PAIR.XEM, ZAIF.PAIR.ETH].forEach(function (pair) {
-    order(pair);
+  [ZAIF.CURRENCY.XEM, ZAIF.CURRENCY.ETH].forEach(function (currency) {
+    order(currency);
   })
 }
 
-function order(pair) {
-  var lastPrice = getLastPrice(pair.JPY),
-    limitPrice = lastPrice - pair.LIMIT_DIFF,
+function order(currency) {
+  var lastPrice = getLastPrice(currency.JPY_PAIR),
+    limitPrice = lastPrice - currency.LIMIT_DIFF,
     nonce = (new Date().getTime() / 1000).toFixed(0),
     params = 'method=trade';
   params += '&nonce=' + nonce;
-  params += '&currency_pair=' + pair.JPY;
+  params += '&currency_pair=' + currency.JPY_PAIR;
   params += '&action=bid&price=' + limitPrice;
-  params += '&amount=' + Math.floor(AMOUNT / limitPrice * Math.pow(10, pair.DECIMAL)) / Math.pow(10, pair.DECIMAL);
+  params += '&amount=' + Math.floor(AMOUNT / limitPrice * Math.pow(10, currency.DECIMAL)) / Math.pow(10, currency.DECIMAL);
   params += '&comment=bot';
   Logger.log(params);
   var result = fetchJson(ZAIF.URL.PRIVATE, 'POST', false, params);
   if (result.error === 'trade temporarily unavailable.') {
     Logger.log(result.error);
     Utilities.sleep(3000);
-    return order(pair);
+    return order(currency);
   }
   Logger.log(result);
 }

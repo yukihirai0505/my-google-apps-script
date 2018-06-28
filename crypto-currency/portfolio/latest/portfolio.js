@@ -26,13 +26,13 @@ function setData() {
     _symbol = symbol === 'YOYO' ? 'YOYOW' : symbol;
     _symbol = symbol === 'IOTA' ? 'MIOTA' : _symbol;
     _symbol = symbol === 'XRB' ? 'NANO' : _symbol;
-    _symbol = symbol === 'BTC/JPY' ? 'BTC' : _symbol;
-    _symbol = symbol === 'XRP/JPY' ? 'XRP' : _symbol;
+    _symbol = symbol === 'BTC/JPY_PAIR' ? 'BTC' : _symbol;
+    _symbol = symbol === 'XRP/JPY_PAIR' ? 'XRP' : _symbol;
     _symbol = symbol === 'LTC/BTC' ? 'LTC' : _symbol;
     _symbol = symbol === 'ETH/BTC' ? 'ETH' : _symbol;
-    _symbol = symbol === 'MONA/JPY' ? 'MONA' : _symbol;
+    _symbol = symbol === 'MONA/JPY_PAIR' ? 'MONA' : _symbol;
     _symbol = symbol === 'MONA/BTC' ? 'MONA' : _symbol;
-    _symbol = symbol === 'BCC/JPY' ? 'BCH' : _symbol;
+    _symbol = symbol === 'BCC/JPY_PAIR' ? 'BCH' : _symbol;
     _symbol = symbol === 'BCC/BTC' ? 'BCH' : _symbol;
     var cap = marketCap.filter(function (e) {
       if (e.symbol === _symbol) {
@@ -66,13 +66,13 @@ function setData() {
 
   function getBitbankLastPrice(symbol) {
     var _symbol;
-    _symbol = symbol === 'BTC/JPY' ? 'btc_jpy' : symbol;
-    _symbol = symbol === 'XRP/JPY' ? 'xrp_jpy' : _symbol;
+    _symbol = symbol === 'BTC/JPY_PAIR' ? 'btc_jpy' : symbol;
+    _symbol = symbol === 'XRP/JPY_PAIR' ? 'xrp_jpy' : _symbol;
     _symbol = symbol === 'LTC/BTC' ? 'ltc_btc' : _symbol;
     _symbol = symbol === 'ETH/BTC' ? 'eth_btc' : _symbol;
-    _symbol = symbol === 'MONA/JPY' ? 'mona_jpy' : _symbol;
+    _symbol = symbol === 'MONA/JPY_PAIR' ? 'mona_jpy' : _symbol;
     _symbol = symbol === 'MONA/BTC' ? 'mona_btc' : _symbol;
-    _symbol = symbol === 'BCC/JPY' ? 'bcc_jpy' : _symbol;
+    _symbol = symbol === 'BCC/JPY_PAIR' ? 'bcc_jpy' : _symbol;
     _symbol = symbol === 'BCC/BTC' ? 'bcc_btc' : _symbol;
     return fetchJson('https://public.bitbank.cc/' + _symbol + '/ticker').data.last;
   }
@@ -162,7 +162,7 @@ function setData() {
         } else if (place === 'bitbank') {
           var jpy;
           btcPrice = getBitbankLastPrice(symbol);
-          if (symbol.indexOf('JPY') > -1) {
+          if (symbol.indexOf('JPY_PAIR') > -1) {
             jpy = btcPrice;
             btcPrice = '-';
           } else {

@@ -37,7 +37,7 @@ function getLastPrice(pair) {
 }
 
 function order() {
-  [BITBANK.PAIR.XRP_JPY, BITBANK.PAIR.MONA_JPY].forEach(function (pair) {
+  [BITBANK.CURRENCY.XRP_JPY, BITBANK.CURRENCY.MONA_JPY].forEach(function (pair) {
     var lastPrice = getLastPrice(pair),
       body = {
         pair: pair,
