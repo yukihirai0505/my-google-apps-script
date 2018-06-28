@@ -13,7 +13,16 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
       PRIVATE: 'https://api.zaif.jp/tapi'
     },
     PAIR: {
-      XEM_JPY: 'xem_jpy'
+      XEM: {
+        JPY: 'xem_jpy',
+        LIMIT_DIFF: 0.0001,
+        DECIMAL: 0
+      },
+      ETH: {
+        JPY: 'eth_jpy',
+        LIMIT_DIFF: 5,
+        DECIMAL: 4
+      }
     }
   };
 
@@ -21,22 +30,28 @@ function getLastPrice(pair) {
   return fetchJson(ZAIF.URL.PUBLIC + '/last_price/' + pair, 'GET', true).last_price;
 }
 
-function order() {
-  var pair = ZAIF.PAIR.XEM_JPY,
-    lastPrice = getLastPrice(pair),
-    limitPrice = lastPrice - 0.0001,
+function orders() {
+  [ZAIF.PAIR.XEM, ZAIF.PAIR.ETH].forEach(function (pair) {
+    order(pair);
+  })
+}
+
+function order(pair) {
+  var lastPrice = getLastPrice(pair.JPY),
+    limitPrice = lastPrice - pair.LIMIT_DIFF,
     nonce = (new Date().getTime() / 1000).toFixed(0),
     params = 'method=trade';
   params += '&nonce=' + nonce;
-  params += '&currency_pair=' + pair;
+  params += '&currency_pair=' + pair.JPY;
   params += '&action=bid&price=' + limitPrice;
-  params += '&amount=' + Math.ceil(AMOUNT / limitPrice);
+  params += '&amount=' + Math.floor(AMOUNT / limitPrice * Math.pow(10, pair.DECIMAL)) / Math.pow(10, pair.DECIMAL);
   params += '&comment=bot';
+  Logger.log(params);
   var result = fetchJson(ZAIF.URL.PRIVATE, 'POST', false, params);
   if (result.error === 'trade temporarily unavailable.') {
     Logger.log(result.error);
     Utilities.sleep(3000);
-    return order();
+    return order(pair);
   }
   Logger.log(result);
 }
