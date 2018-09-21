@@ -62,6 +62,13 @@ function setYoutubeData() {
     });
   }
 
+  function getTop3ViewCountVideos(videoList) {
+    var sortedVideo = videoList.sort(function (a, b) {
+      return b.statistics.viewCount - a.statistics.viewCount;
+    });
+    return sortedVideo.slice(0, 3);
+  }
+
   function filterVideoByDate(videoList, date, isLessThan) {
     return videoList.filter(function (video) {
       if (!isLessThan) {
@@ -102,7 +109,7 @@ function setYoutubeData() {
       videosWithinMonth.push.apply(videosWithinMonth, _videosWithinMonth);
 
       var nextPageToken = result.nextPageToken;
-      if (_videosWithinMonth.length > 35 && nextPageToken) {
+      if (_videosWithinMonth.length > 35 && videoList.length - _videosWithinMonth.length < 35 && nextPageToken) {
         getVideos(nextPageToken);
       }
     }
@@ -111,6 +118,10 @@ function setYoutubeData() {
     if (prFlg) {
       videosWithinMonth = filterPR(videosWithinMonth);
       videoList = filterPR(videoList);
+    }
+    if (top3Flg) {
+      videosWithinMonth = getTop3ViewCountVideos(videosWithinMonth);
+      videoList = getTop3ViewCountVideos(videoList);
     }
     return {
       title: videos[0].snippet.channelTitle,
@@ -157,10 +168,10 @@ function setYoutubeData() {
           e[9] = '=(G' + cellNum + '+I' + cellNum + ')/' + average(video.withinMonth, function (v) {
             return v.statistics.viewCount;
           }, false);
-          e[10] = video.withinMonth.map(function(video) {
+          e[10] = video.withinMonth.map(function (video) {
             return 'https://youtu.be/' + video.id;
           }).join('\n');
-          e[11] = video.beforeMonth.map(function(video) {
+          e[11] = video.beforeMonth.map(function (video) {
             return 'https://youtu.be/' + video.id;
           }).join('\n');
         }
