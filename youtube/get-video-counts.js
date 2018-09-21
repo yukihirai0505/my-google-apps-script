@@ -51,10 +51,16 @@ function setYoutubeData() {
     return fetchJson(url);
   }
 
-  function filterVideoByDate(videoList, date) {
+  function filterVideoByDate(videoList, date, isLessThan) {
     return videoList.filter(function (video) {
-      if (new Date(video.snippet.publishedAt).getTime() >= date.getTime()) {
-        return video;
+      if (!isLessThan) {
+        if (new Date(video.snippet.publishedAt).getTime() >= date.getTime()) {
+          return video;
+        }
+      } else {
+        if (new Date(video.snippet.publishedAt).getTime() <= date.getTime()) {
+          return video;
+        }
       }
     });
   }
@@ -94,11 +100,7 @@ function setYoutubeData() {
     return {
       title: videos[0].snippet.channelTitle,
       withinMonth: videosWithinMonth.slice(0, 15),
-      beforeMonth: videoList.filter(function (video) {
-        if (new Date(video.snippet.publishedAt).getTime() <= ONE_MONTH_AGO.getTime()) {
-          return video;
-        }
-      }).slice(0, 15)
+      beforeMonth: filterVideoByDate(videoList, ONE_MONTH_AGO, true).slice(0, 15)
     };
   }
 
