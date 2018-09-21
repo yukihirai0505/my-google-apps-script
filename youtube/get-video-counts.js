@@ -1,5 +1,8 @@
 function setYoutubeData() {
-  var keyQuery = '&key=' + YOUTUBE_DATA_API_KEY;
+  var keyQuery = '&key=' + YOUTUBE_DATA_API_KEY,
+    flgRange = YOUTUBE_SHEET.getRange(1, 1, 2, 1).getValues(),
+    prFlg = flgRange[0][0],
+    top3Flg = flgRange[1][0];
 
   function average(arr, fn, withEqual) {
     if (arr.length > 0) {
@@ -51,6 +54,14 @@ function setYoutubeData() {
     return fetchJson(url);
   }
 
+  function filterPR(videoList) {
+    return videoList.filter(function (video) {
+      if (video.snippet.description.match(/提供/)) {
+        return video;
+      }
+    });
+  }
+
   function filterVideoByDate(videoList, date, isLessThan) {
     return videoList.filter(function (video) {
       if (!isLessThan) {
@@ -97,6 +108,10 @@ function setYoutubeData() {
     }
 
     getVideos();
+    if (prFlg) {
+      videosWithinMonth = filterPR(videosWithinMonth);
+      videoList = filterPR(videoList);
+    }
     return {
       title: videos[0].snippet.channelTitle,
       withinMonth: videosWithinMonth.slice(0, 15),
@@ -104,10 +119,10 @@ function setYoutubeData() {
     };
   }
 
-  var range = YOUTUBE_SHEET.getRange(2, 1, YOUTUBE_SHEET.getLastRow(), 10);
+  var range = YOUTUBE_SHEET.getRange(4, 1, YOUTUBE_SHEET.getLastRow(), 12);
   var data = range.getValues().map(function (e, i) {
     var channelUrl = e[0],
-      cellNum = i + 2,
+      cellNum = i + 4,
       channelId;
     if (channelUrl) {
       try {
@@ -142,7 +157,12 @@ function setYoutubeData() {
           e[9] = '=(G' + cellNum + '+I' + cellNum + ')/' + average(video.withinMonth, function (v) {
             return v.statistics.viewCount;
           }, false);
-
+          e[10] = video.withinMonth.map(function(video) {
+            return 'https://youtu.be/' + video.id;
+          }).join('\n');
+          e[11] = video.beforeMonth.map(function(video) {
+            return 'https://youtu.be/' + video.id;
+          }).join('\n');
         }
       } catch (err) {
         e[8] = err.message;
