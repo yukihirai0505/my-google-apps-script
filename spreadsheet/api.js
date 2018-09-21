@@ -3,7 +3,7 @@ var BK = SpreadsheetApp.getActiveSpreadsheet(),
 
 //  Spreadsheet API
 function doGet(e) {
-  var data = SHEET.getRange(1, 1, SHEET.getLastRow(), 4).getValues();
+  var data = SHEET.getRange(1, 1, SHEET.getLastRow(), 5).getValues();
   var keys = data[0];
 
   data.shift();

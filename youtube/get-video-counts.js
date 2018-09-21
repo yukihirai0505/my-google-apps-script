@@ -23,6 +23,14 @@ function setYoutubeData() {
     return fetchJson(url);
   }
 
+  function getSubscribeCount(_channelId) {
+    var channelId = '&id=' + _channelId,
+      url = 'https://www.googleapis.com/youtube/v3/channels?part=statistics'
+        + channelId
+        + keyQuery;
+    return fetchJson(url);
+  }
+
   function getVideoList(_videoIds, _pageToken) {
     var videoIds = '&id=' + _videoIds,
       pageToken = _pageToken ? '&pageToken=' + _pageToken : '',
@@ -60,10 +68,10 @@ function setYoutubeData() {
     function getVideos(pageToken) {
       var result = searchChannelVideos(channelId, pageToken),
         _videos = result.items.filter(function (video) {
-          if (video.id.kind === 'youtube#video') {
-            return video;
+            if (video.id.kind === 'youtube#video') {
+              return video;
+            }
           }
-        }
         ),
         _videoIds = _videos.map(function (video) {
           return video.id.videoId;
@@ -94,7 +102,7 @@ function setYoutubeData() {
     };
   }
 
-  var range = YOUTUBE_SHEET.getRange(2, 1, YOUTUBE_SHEET.getLastRow(), 9);
+  var range = YOUTUBE_SHEET.getRange(2, 1, YOUTUBE_SHEET.getLastRow(), 10);
   var data = range.getValues().map(function (e, i) {
     var channelUrl = e[0],
       cellNum = i + 2,
@@ -113,22 +121,23 @@ function setYoutubeData() {
           var video = getVideo(channelId);
           e[1] = video.title;
           e[2] = channelId;
-          e[3] = average(video.withinMonth.slice(0, 6), function (v) {
+          e[3] = getSubscribeCount(channelId).items[0].statistics.subscriberCount;
+          e[4] = average(video.withinMonth.slice(0, 6), function (v) {
             return v.statistics.viewCount;
           }, true);
-          e[4] = average(video.beforeMonth, function (v) {
+          e[5] = average(video.beforeMonth, function (v) {
             return v.statistics.viewCount;
-          }, true);
-          e[5] = average(video.withinMonth, function (v) {
-            return v.statistics.likeCount;
           }, true);
           e[6] = average(video.withinMonth, function (v) {
-            return v.statistics.dislikeCount;
+            return v.statistics.likeCount;
           }, true);
           e[7] = average(video.withinMonth, function (v) {
+            return v.statistics.dislikeCount;
+          }, true);
+          e[8] = average(video.withinMonth, function (v) {
             return v.statistics.commentCount;
           }, true);
-          e[8] = '=(F' + cellNum + '+H' + cellNum + ')/' + average(video.withinMonth, function (v) {
+          e[9] = '=(G' + cellNum + '+I' + cellNum + ')/' + average(video.withinMonth, function (v) {
             return v.statistics.viewCount;
           }, false);
 
