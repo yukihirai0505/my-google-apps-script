@@ -109,7 +109,7 @@ function setYoutubeData() {
       videosWithinMonth.push.apply(videosWithinMonth, _videosWithinMonth);
 
       var nextPageToken = result.nextPageToken;
-      if (_videosWithinMonth.length > 35 && videoList.length - _videosWithinMonth.length < 35 && nextPageToken) {
+      if (videoList.length - _videosWithinMonth.length < 35 && nextPageToken) {
         getVideos(nextPageToken);
       }
     }
