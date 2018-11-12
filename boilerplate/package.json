@@ -1,0 +1,48 @@
+{
+  "name": "boilerplace",
+  "version": "1.0.0",
+  "description": "Description",
+  "main": "src/index.js",
+  "scripts": {
+    "format": "npx prettier --write ./src/*",
+    "build": "webpack -p",
+    "upload": "npx clasp push",
+    "deploy": "yarn format && yarn build && yarn upload"
+  },
+  "keywords": [
+    "google-apps-script",
+    "gsuite",
+    "apps-script"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-member-expression-literals": "^7.0.0",
+    "@babel/plugin-transform-object-assign": "^7.0.0",
+    "@babel/plugin-transform-property-literals": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@google/clasp": "^1.6.0",
+    "@types/google-apps-script": "^0.0.28",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.2",
+    "dayjs": "^1.7.7",
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-googleappsscript": "^1.0.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "gas-lib": "^2.0.2",
+    "gas-webpack-plugin": "^0.3.0",
+    "prettier": "^1.14.3",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
+  }
+}

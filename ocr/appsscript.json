@@ -1,0 +1,13 @@
+{
+  "timeZone": "Asia/Calcutta",
+  "dependencies": {
+    "enabledAdvancedServices": [
+      {
+        "userSymbol": "Drive",
+        "serviceId": "drive",
+        "version": "v2"
+      }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER"
+}
