@@ -10,7 +10,14 @@ const getTwitterService = () =>
     .setAccessToken(getProperty('TWITTER_ACCESS_TOKEN'), getProperty('TWITTER_ACCESS_SECRET'))
 
 const urls = []
-const keywords = ['#Progate', '#Dotinstall', '#テックキャンプ', '#Qiita']
+const keywords = [
+  '#Progate',
+  '#Dotinstall',
+  '#テックキャンプ',
+  '#Qiita',
+  '#プログラミング初心者',
+  '#プログラミング '
+]
 const twitterService = getTwitterService()
 
 export const autoLike = () => {
