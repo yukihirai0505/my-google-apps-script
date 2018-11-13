@@ -15,8 +15,8 @@ const keywords = [
   '#Dotinstall',
   '#テックキャンプ',
   '#Qiita',
-  '#プログラミング初心者',
-  '#プログラミング '
+  '#駆け出しエンジニアと繋がりたい',
+  '#Railsチュートリアル'
 ]
 const twitterService = getTwitterService()
 
