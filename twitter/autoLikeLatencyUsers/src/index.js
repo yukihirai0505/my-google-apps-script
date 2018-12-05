@@ -4,8 +4,7 @@ const bk = SpreadsheetApp.getActiveSpreadsheet()
 const followersSheet = bk.getSheetByName('followers')
 
 global.saveFollowers = () => {
-  const screenName = 'rrrr_fx'
-  // never_be_a_pm, prog_8, manabubannai, yuki_99_s
+  const screenName = 'yabaiwebyasan'
 
   function getIds(_ids = [], _nextCursor = -1) {
     const { next_cursor_str: nextCursor, ids } = getFollowerIds(screenName, _nextCursor)
@@ -17,7 +16,11 @@ global.saveFollowers = () => {
   }
 
   const ids = getIds().map(id => [id])
-  followersSheet.getRange(2, 1, ids.length, 1).setValues(ids)
+  const savedIds = followersSheet
+    .getRange(2, 1, followersSheet.getLastRow(), 1)
+    .getValues()
+    .filter(e => e[0])
+  followersSheet.getRange(savedIds.length + 2, 1, ids.length, 1).setValues(ids)
 }
 
 global.getUserTweet = () => {
