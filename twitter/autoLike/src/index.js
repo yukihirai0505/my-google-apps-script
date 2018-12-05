@@ -15,7 +15,7 @@ global.autoLike = () => {
   keywords.forEach(keyword => {
     const { statuses: tweets } = search(keyword)
     tweets.forEach(tweet => {
-      // 1000/24 hour
+      // 1000/24 hour ref: https://developer.twitter.com/en/docs/basics/rate-limits.html
       if (ids.length > 40) {
         return
       }
