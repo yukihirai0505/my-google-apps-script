@@ -3,6 +3,24 @@ import { getFollowerIds, getUserTimeLine, favorite } from './twitter'
 const bk = SpreadsheetApp.getActiveSpreadsheet()
 const followersSheet = bk.getSheetByName('followers')
 
+// global.clean = () => {
+//   function removeDuplicatesSafe(arr) {
+//     const seen = {}
+//     const retArr = []
+//     for (let i = 0; i < arr.length; i += 1) {
+//       if (!(arr[i] in seen)) {
+//         retArr.push(arr[i])
+//         seen[arr[i]] = true
+//       }
+//     }
+//     return retArr
+//   }
+//
+//   const userIds = followersSheet.getRange(2, 1, followersSheet.getLastRow(), 1).getValues()
+//   const pureUserIds = removeDuplicatesSafe(userIds)
+//   followersSheet.getRange(2, 2, pureUserIds.length, 1).setValues(pureUserIds)
+// }
+
 global.saveFollowers = () => {
   const screenName = 'yabaiwebyasan'
 
