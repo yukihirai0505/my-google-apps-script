@@ -12,6 +12,11 @@ global.autoLike = () => {
     '#駆け出しエンジニアと繋がりたい',
     '#Railsチュートリアル'
   ]
+  const validate = (idStr, status) =>
+    ids.filter(e => e === idStr).length === 0 &&
+    status.favorited === false &&
+    !status.text.match(/エッチ|エロ/)
+
   keywords.forEach(keyword => {
     const { statuses: tweets } = search(keyword)
     tweets.forEach(tweet => {
@@ -25,7 +30,7 @@ global.autoLike = () => {
         const { id_str: idStr } = tweet
         // search result tweet.favorited is not correct somthimes, so fetch it again
         const status = show(idStr)
-        if (ids.filter(e => e === idStr).length === 0 && status.favorited === false) {
+        if (validate(idStr, status)) {
           favorite(idStr)
           Utilities.sleep(getRandomInt(1000, 2000))
           ids.push(idStr)
