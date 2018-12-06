@@ -73,8 +73,11 @@ global.autoLike = () => {
   const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   let favoriteCount = 0
-  const range = followersSheet.getRange(2, 1, followersSheet.getLastRow(), 3)
-  const data = range.getValues().map(e => {
+  const values = followersSheet
+    .getRange(2, 1, followersSheet.getLastRow(), 3)
+    .getValues()
+    .filter(e => e[1])
+  const data = values.map(e => {
     const row = e
     const tweetId = row[1]
     const favorited = row[2]
@@ -90,5 +93,5 @@ global.autoLike = () => {
     }
     return row
   })
-  range.setValues(data)
+  followersSheet.getRange(2, 1, data.length, 3).setValues(data)
 }
