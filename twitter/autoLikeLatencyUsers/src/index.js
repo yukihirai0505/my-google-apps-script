@@ -48,7 +48,8 @@ global.getUserTweet = () => {
     const row = e
     const userId = row[0]
     const tweetId = row[1]
-    if (userId && !tweetId && apiRequestCount < 300) {
+    // 50 request per 30 min
+    if (userId && !tweetId && apiRequestCount < 50) {
       try {
         const tweets = getUserTimeLine(userId)
         apiRequestCount += 1
@@ -78,7 +79,8 @@ global.autoLike = () => {
     const row = e
     const tweetId = row[1]
     const favorited = row[2]
-    if (tweetId && favorited === false && favoriteCount < 40) {
+    // 10 request per 15min
+    if (tweetId && favorited === false && favoriteCount < 10) {
       try {
         favorite(tweetId)
         row[2] = true
