@@ -27,3 +27,20 @@ export const favorite = idStr =>
   twitterService.fetch(`https://api.twitter.com/1.1/favorites/create.json?id=${idStr}`, {
     method: 'post'
   })
+
+export const lists = screenName =>
+  JSON.parse(
+    twitterService.fetch(`https://api.twitter.com/1.1/lists/list.json?screen_name=${screenName}`)
+  )
+
+export const listShow = listId =>
+  JSON.parse(twitterService.fetch(`https://api.twitter.com/1.1/lists/show.json?list_id=${listId}`))
+
+export const listMembersCreateAll = (listId, screenNames) =>
+  twitterService.fetch(`https://api.twitter.com/1.1/lists/members/create_all.json`, {
+    method: 'post',
+    payload: {
+      list_id: listId,
+      screen_name: screenNames.join(',')
+    }
+  })

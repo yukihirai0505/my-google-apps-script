@@ -1,6 +1,53 @@
-import { favorite, search, show } from './twitter'
+import { favorite, search, show, listMembersCreateAll, lists, listShow } from './twitter'
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
+global.showLists = () => {
+  Logger.log(lists('yabaiwebyasan'))
+}
+
+global.autoList = () => {
+  function removeDuplicatesSafe(arr) {
+    const seen = {}
+    const retArr = []
+    for (let i = 0; i < arr.length; i += 1) {
+      if (!(arr[i] in seen)) {
+        retArr.push(arr[i])
+        seen[arr[i]] = true
+      }
+    }
+    return retArr
+  }
+
+  const data = [
+    {
+      listId: '1073020721293516801',
+      tag: '#駆け出しエンジニアと繋がりたい'
+    },
+    {
+      listId: '1073034480187670528',
+      tag: '#Dotinstall'
+    },
+    {
+      listId: '1073034377947271168',
+      tag: '#Progate'
+    },
+    {
+      listId: '1073034228093280257',
+      tag: '#Qiita'
+    }
+  ]
+  data.forEach(d => {
+    const { listId, tag } = d
+    const list = listShow(listId)
+    if (list.member_count < 5000) {
+      const { statuses: tweets } = search(tag)
+      const users = tweets.map(tweet => tweet.user.screen_name)
+      Logger.log(users)
+      listMembersCreateAll(listId, removeDuplicatesSafe(users))
+    }
+  })
+}
 
 global.autoLike = () => {
   const ids = []
