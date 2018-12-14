@@ -3,7 +3,15 @@ import { favorite, search, show, listMembersCreateAll, lists, listShow } from '.
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
 global.showLists = () => {
-  Logger.log(lists('yabaiwebyasan'))
+  Logger.log(
+    lists('yabaiwebyasan').map(list => {
+      const { name, id_str: idStr } = list
+      return {
+        id: idStr,
+        name
+      }
+    })
+  )
 }
 
 global.autoList = () => {
@@ -20,21 +28,29 @@ global.autoList = () => {
   }
 
   const data = [
+    // {
+    //   listId: '1073020721293516801',
+    //   tag: '#駆け出しエンジニアと繋がりたい'
+    // },
+    // {
+    //   listId: '1073034480187670528',
+    //   tag: '#Dotinstall'
+    // },
+    // {
+    //   listId: '1073034377947271168',
+    //   tag: '#Progate'
+    // },
+    // {
+    //   listId: '1073034228093280257',
+    //   tag: '#Qiita'
+    // },
     {
-      listId: '1073020721293516801',
-      tag: '#駆け出しエンジニアと繋がりたい'
+      listId: '1073372507657330688',
+      tag: '#テックキャンプ'
     },
     {
-      listId: '1073034480187670528',
-      tag: '#Dotinstall'
-    },
-    {
-      listId: '1073034377947271168',
-      tag: '#Progate'
-    },
-    {
-      listId: '1073034228093280257',
-      tag: '#Qiita'
+      listId: '1073372604461854720',
+      tag: '#Railsチュートリアル'
     }
   ]
   data.forEach(d => {
