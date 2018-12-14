@@ -43,7 +43,7 @@ global.autoList = () => {
     if (list.member_count < 5000) {
       const { statuses: tweets } = search(tag)
       const users = tweets.map(tweet => tweet.user.screen_name)
-      Logger.log(users)
+      Utilities.sleep(getRandomInt(1000, 2000))
       listMembersCreateAll(listId, removeDuplicatesSafe(users))
     }
   })
