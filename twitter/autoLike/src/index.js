@@ -55,6 +55,10 @@ global.autoList = () => {
     {
       listId: '1074967929324621826',
       tags: ['#ウェブカツ']
+    },
+    {
+      listId: '1075389735751667717',
+      tags: ['#100DaysOfCode']
     }
   ]
   data.forEach(d => {
@@ -81,7 +85,8 @@ global.autoLike = () => {
     '#ドットインストール',
     '#Dotinstall',
     '#Qiita',
-    '#Railsチュートリアル'
+    '#Railsチュートリアル',
+    '#100DaysOfCode'
   ]
   const validate = (idStr, status) =>
     ids.filter(e => e === idStr).length === 0 &&
