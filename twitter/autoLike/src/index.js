@@ -45,41 +45,47 @@ global.autoHashTagList = () => {
   const data = [
     {
       listId: '1073020721293516801',
-      tag: '#駆け出しエンジニアと繋がりたい'
+      tags: ['#駆け出しエンジニアと繋がりたい']
     },
     {
       listId: '1073034480187670528',
-      tag: '#Dotinstall'
+      tags: ['#Dotinstall', '#ドットインストール']
     },
     {
       listId: '1073034377947271168',
-      tag: '#Progate'
+      tags: ['#Progate']
     },
     {
       listId: '1073034228093280257',
-      tag: '#Qiita'
+      tags: ['#Qiita']
     },
     {
       listId: '1073372507657330688',
-      tag: '#テックキャンプ'
+      tags: ['#テックキャンプ']
     },
     {
       listId: '1073372604461854720',
-      tag: '#Railsチュートリアル'
+      tags: ['#Railsチュートリアル']
     },
     {
       listId: '1074967929324621826',
-      tag: '#ウェブカツ'
+      tags: ['#ウェブカツ']
+    },
+    {
+      listId: '1075389735751667717',
+      tags: ['#100DaysOfCode']
     }
   ]
   data.forEach(d => {
-    const { listId, tag } = d
+    const { listId, tags } = d
     const list = listShow(listId)
     if (list.member_count < 5000) {
-      const { statuses: tweets } = search(tag)
-      const users = tweets.map(tweet => tweet.user.screen_name)
-      Utilities.sleep(getRandomInt(1000, 2000))
-      listMembersCreateAll(listId, removeDuplicatesSafe(users))
+      tags.forEach(tag => {
+        const { statuses: tweets } = search(tag)
+        const users = tweets.map(tweet => tweet.user.screen_name)
+        Utilities.sleep(getRandomInt(1000, 2000))
+        listMembersCreateAll(listId, removeDuplicatesSafe(users))
+      })
     }
   })
 }
@@ -91,9 +97,11 @@ global.autoLike = () => {
     '#テックキャンプ',
     '#Progate',
     '#駆け出しエンジニアと繋がりたい',
+    '#ドットインストール',
     '#Dotinstall',
     '#Qiita',
-    '#Railsチュートリアル'
+    '#Railsチュートリアル',
+    '#100DaysOfCode'
   ]
   const validate = (idStr, status) =>
     ids.filter(e => e === idStr).length === 0 &&
