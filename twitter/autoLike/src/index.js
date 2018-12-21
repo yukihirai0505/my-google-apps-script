@@ -14,7 +14,22 @@ global.showLists = () => {
   )
 }
 
-global.autoList = () => {
+global.autoFollowersList = () => {
+  // あるインフルエンサーのフォロワーを一気にリストに突っ込む
+
+  // 対象のリストに重複ユーザーがいないかを確認する
+  // => 情報感度の高い人たち
+  // @poly_soft => 4877
+  // @cohki0305 => 7237
+  // @hikarine3 => 6013
+  // @never_be_a_pm => 21500
+  // @prog_8 => 18200
+  // @yuki_99_s => 21200
+  // 79027 => リストが15くらい必要www
+  // 5000で分割する
+}
+
+global.autoHashTagList = () => {
   function removeDuplicatesSafe(arr) {
     const seen = {}
     const retArr = []

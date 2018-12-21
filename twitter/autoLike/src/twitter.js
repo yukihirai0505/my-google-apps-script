@@ -37,7 +37,6 @@ export const listShow = listId =>
   JSON.parse(twitterService.fetch(`https://api.twitter.com/1.1/lists/show.json?list_id=${listId}`))
 
 export const listMembersCreateAll = (listId, screenNames) => {
-  Logger.log(screenNames.length)
   twitterService.fetch(`https://api.twitter.com/1.1/lists/members/create_all.json`, {
     method: 'post',
     payload: {
@@ -45,4 +44,9 @@ export const listMembersCreateAll = (listId, screenNames) => {
       screen_name: screenNames.join(',')
     }
   })
+}
+
+export const getFollowerIds = (screenName, nextCursor = -1) => {
+  const url = `https://api.twitter.com/1.1/followers/ids.json?screen_name=${screenName}&count=5000&cursor=${nextCursor}&stringify_ids=true`
+  return JSON.parse(twitterService.fetch(url))
 }
