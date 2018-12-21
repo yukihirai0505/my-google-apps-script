@@ -1,6 +1,36 @@
-import { favorite, search, show, listMembersCreateAll, lists, listShow } from './twitter'
+import {
+  favorite,
+  search,
+  show,
+  listMembersCreateAll,
+  listMembers,
+  lists,
+  listShow,
+  getFollowerIds
+} from './twitter'
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+export const chunkArr = (array, size) => {
+  const chunkedArr = []
+  const copied = array
+  const numOfChild = Math.ceil(copied.length / size)
+  for (let i = 0; i < numOfChild; i += 1) {
+    chunkedArr.push(copied.splice(0, size))
+  }
+  return chunkedArr
+}
+
+function removeDuplicatesSafe(arr) {
+  const seen = {}
+  const retArr = []
+  for (let i = 0; i < arr.length; i += 1) {
+    if (!(arr[i] in seen)) {
+      retArr.push(arr[i])
+      seen[arr[i]] = true
+    }
+  }
+  return retArr
+}
 
 global.showLists = () => {
   Logger.log(
@@ -15,33 +45,56 @@ global.showLists = () => {
 }
 
 global.autoFollowersList = () => {
-  // あるインフルエンサーのフォロワーを一気にリストに突っ込む
+  // 対象のリストを取得
+  const myLists = lists('yabaiwebyasan').filter(list => list.name.match(/情報感度の高い方々/))
+  // リストに追加済みのメンバーを取得
+  let listMemberIds = []
+  myLists.forEach(list => {
+    const { id_str: idStr, member_count: memberCount } = list
+    if (memberCount > 0) {
+      listMemberIds = listMemberIds.concat(listMembers(idStr).users.map(user => user.id_str))
+    }
+  })
+  // 上限に達していないリストを取得
+  const targetLists = myLists.filter(list => {
+    const { member_count: memberCount } = list
+    return memberCount < 5000
+  })
+  const screenName = 'yabaiwebyasan'
 
-  // 対象のリストに重複ユーザーがいないかを確認する
-  // => 情報感度の高い人たち
-  // @poly_soft => 4877
-  // @cohki0305 => 7237
-  // @hikarine3 => 6013
-  // @never_be_a_pm => 21500
-  // @prog_8 => 18200
-  // @yuki_99_s => 21200
-  // 79027 => リストが15くらい必要www
-  // 5000で分割する
+  // フォロワーIDを取得
+  function getIds(_ids = [], _nextCursor = -1) {
+    const { next_cursor_str: nextCursor, ids } = getFollowerIds(screenName, _nextCursor)
+    if (Number(nextCursor) > 0) {
+      return getIds(_ids.concat(ids), nextCursor)
+    }
+    return _ids.concat(ids)
+  }
+
+  let listIndex = 0
+  let idsCount = 0
+  let allIds = getIds()
+  // フォロワーIDとリストに追加済みのメンバーで重複があれば除去
+  allIds = allIds.filter(id => listMemberIds.indexOf(id) === -1)
+  // 5000を100人ずつに分割してリストに追加
+  chunkArr(allIds.slice(0, 5000), 100).forEach(ids => {
+    const list = targetLists[listIndex]
+    const { id_str: idStr, member_count: memberCount } = list
+    const params = {
+      list_id: idStr,
+      user_id: removeDuplicatesSafe(ids).join(',')
+    }
+    listMembersCreateAll(params)
+    // リストがいっぱになれば新しいリストを使う
+    idsCount += ids.length
+    if (memberCount + idsCount > 5000) {
+      listIndex += 1
+      idsCount = 0
+    }
+  })
 }
 
 global.autoHashTagList = () => {
-  function removeDuplicatesSafe(arr) {
-    const seen = {}
-    const retArr = []
-    for (let i = 0; i < arr.length; i += 1) {
-      if (!(arr[i] in seen)) {
-        retArr.push(arr[i])
-        seen[arr[i]] = true
-      }
-    }
-    return retArr
-  }
-
   const data = [
     {
       listId: '1073020721293516801',
@@ -84,7 +137,11 @@ global.autoHashTagList = () => {
         const { statuses: tweets } = search(tag)
         const users = tweets.map(tweet => tweet.user.screen_name)
         Utilities.sleep(getRandomInt(1000, 2000))
-        listMembersCreateAll(listId, removeDuplicatesSafe(users))
+        const params = {
+          list_id: listId,
+          screen_name: removeDuplicatesSafe(users).join(',')
+        }
+        listMembersCreateAll(params)
       })
     }
   })
