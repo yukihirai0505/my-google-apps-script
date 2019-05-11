@@ -150,14 +150,16 @@ global.autoHashTagList = () => {
 global.autoLike = () => {
   const ids = []
   const keywords = [
-    '#ウェブカツ',
-    '#テックキャンプ',
-    '#Progate',
-    '#駆け出しエンジニアと繋がりたい',
-    '#ドットインストール',
-    '#Dotinstall',
-    '#Qiita',
-    '#Railsチュートリアル',
+    // '#ウェブカツ',
+    // '#テックキャンプ',
+    // '#Progate',
+    // '#駆け出しエンジニアと繋がりたい',
+    // '#ドットインストール',
+    // '#Dotinstall',
+    // '#Qiita',
+    // '#Railsチュートリアル',
+    '#WomenWhoCode',
+    '#CodeNewbie',
     '#100DaysOfCode'
   ]
   const validate = (idStr, status) =>

@@ -16,7 +16,8 @@ export const search = keyword =>
     twitterService.fetch(
       `https://api.twitter.com/1.1/search/tweets.json?q=${encodeURIComponent(
         `${keyword} exclude:retweets`
-      )}&lang=ja&result_type=recent&count=100`
+      )}&lang=en&result_type=recent&count=100`
+      // )}&lang=ja&result_type=recent&count=100`
     )
   )
 
